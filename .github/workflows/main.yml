@@ -5,7 +5,7 @@ on:
     inputs:
       ivy:
         description: 'Ivy URL'
-        default: 'https://peramic.github.io/ivy'
+        default: 'https://menucha-de.github.io/ivy'
         required: true
       maven:
         description: 'Maven URL'
@@ -21,27 +21,27 @@ jobs:
       - name: Checkout ivy
         uses: actions/checkout@v2
         with:
-          repository: peramic/ivy
+          repository: menucha-de/ivy
           token: ${{ secrets.ACTIONS }}
           path: ivy
       - name: Reset ivy
-        uses: peramic/actions/git-reset@v1
+        uses: menucha-de/actions/git-reset@v1
         with:
           working-directory: ivy
       - name: Build
         id: build
-        uses: peramic/actions/build@v1
+        uses: menucha-de/actions/build@v1
         with:
           arch: ${{ github.event.inputs.arch }}
           script: './mkapp ${{ github.event.inputs.ivy }} linux-all on ${{ github.event.inputs.maven }}'
           token: ${{ secrets.ACTIONS }}
       - name: Generate index
-        uses: peramic/actions/generate-index@v1
+        uses: menucha-de/actions/generate-index@v1
         with:
           working-directory: ivy
           content-include-pattern: ${{ '^[0-9]+\.[0-9]+(\.[a-zA-Z0-9]+)*(-[a-zA-Z0-9]+)*$' }}
       - name: Publish ivy
-        uses: peramic/actions/git-push@v1
+        uses: menucha-de/actions/git-push@v1
         with:
           working-directory: ivy
           arguments: -u --force
