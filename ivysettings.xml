@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<ivysettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<properties file="build.properties" />
+	<properties file="${resources.dir}/version.properties" />
+
+	<settings defaultResolver="default" />
+	<caches defaultCacheDir="${env.GITHUB_WORKSPACE}/.ivy2/cache" />
+
+	<resolvers>
+		<chain name="default">
+			<filesystem name="resources">
+				<ivy pattern="${basedir}/resources/[organisation]/[module]/[revision]/ivy.xml" />
+				<artifact pattern="${basedir}/resources/[organisation]/[module]/[revision]/[artifact](-[classifier]).[ext]" />
+			</filesystem>
+			<filesystem name="local">
+				<ivy pattern="${ivy.default.ivy.user.dir}/local/[organisation]/[module]/[revision]/ivy.xml" />
+				<artifact pattern="${ivy.default.ivy.user.dir}/local/[organisation]/[module]/[revision]/[artifact](-[classifier]).[ext]" />
+			</filesystem>
+			<filesystem name="remotefs">
+				<ivy pattern="${env.GITHUB_WORKSPACE}/ivy/[organisation]/[module]/[revision]/ivy.xml" />
+				<artifact pattern="${env.GITHUB_WORKSPACE}/ivy/[organisation]/[module]/[revision]/[artifact](-[classifier]).[ext]" />
+			</filesystem>
+			<url name="remote">
+				<ivy pattern="${ivy.url}/[organisation]/[module]/[revision]/ivy.xml" />
+				<artifact pattern="${ivy.url}/[organisation]/[module]/[revision]/[artifact](-[classifier]).[ext]" />
+			</url>
+			<url name="cache">
+				<ivy pattern="${ivy.url}/[organisation]/[module]/[revision]/ivy.xml" />
+				<artifact pattern="${ivy.url}/[organisation]/[module]/[revision]/[artifact](-[classifier]).[ext]" />
+			</url>
+			<url name="maven" m2compatible="true">
+				<artifact pattern="${repo.url}/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]" />
+			</url>
+		</chain>
+		<chain>
+			<filesystem name="local">
+				<ivy pattern="${ivy.default.ivy.user.dir}/local/[organisation]/[module]/[revision]/ivy.xml" />
+				<artifact pattern="${ivy.default.ivy.user.dir}/local/[organisation]/[module]/[revision]/[artifact].[ext]" />
+			</filesystem>
+			<sftp name="remote" keyFile="${keyfile}">
+				<ivy pattern="sftp://ivy@ivy/srv/ivy/[organisation]/[module]/[revision]/ivy.xml" />
+				<artifact pattern="sftp://ivy@ivy/srv/ivy/[organisation]/[module]/[revision]/[artifact].[ext]" />
+			</sftp>
+			<filesystem name="remotefs">
+				<ivy pattern="${env.GITHUB_WORKSPACE}/ivy/[organisation]/[module]/[revision]/ivy.xml" />
+				<artifact pattern="${env.GITHUB_WORKSPACE}/ivy/[organisation]/[module]/[revision]/[artifact].[ext]" />
+			</filesystem>
+		</chain>
+	</resolvers>
+</ivysettings>

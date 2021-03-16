@@ -1,0 +1,10 @@
+# Create a copy "build.properties" of this file and change the properties
+
+# The maven repository URL
+repo.url=https://repo1.maven.org/maven2
+
+# The ivy resolver (default=local)
+#ivy.resolver=remote
+
+# The ivy repository URL
+ivy.url=http://{Host}/ivy

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e
+set -x
+
+. /usr/share/mkapp/functions
+
+ivy_url=$1
+platform=$2
+debug=$3
+maven_url=$4
+
+env
+
+ant -Dant.build.javac.source=1.8 -Dant.build.javac.target=1.8 -Divy.resolver=remotefs -Drepo.url=$maven_url -Divy.url=$ivy_url -Dapi.url=$ivy_url -Djavac.debug=$debug publish
+
+chown -R $(stat -c "%u" .) /github/workspace/ivy

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+	<info organisation="com/google/gwt" module="gwt-dev" status="integration" default="true" />
+
+	<configurations>
+		<conf name="default" visibility="public" />
+		<conf name="doc" visibility="public" />
+		<conf name="src" visibility="public" />
+	</configurations>
+
+	<publications>
+		<artifact name="gwt-dev" type="jar" ext="jar" conf="default" />
+		<artifact name="gwt-dev-javadoc" type="jar" ext="jar" conf="doc" />
+		<artifact name="gwt-dev-sources" type="jar" ext="jar" conf="src" />
+	</publications>
+
+	<dependencies>
+		<dependency org="colt" name="colt" rev="${colt.version}" conf="default" />
+		<dependency org="org/apache/ant" name="ant" rev="${org.apache.ant.version}" conf="default" />
+		<dependency org="org/ow2/asm" name="asm" rev="${asm.version}" conf="default" />
+		<dependency org="org/w3c/css" name="sac" rev="${sac.version}" conf="default" />
+		<dependency org="tapestry" name="tapestry" rev="${tapestry.version}" conf="default" />
+	</dependencies>
+</ivy-module>

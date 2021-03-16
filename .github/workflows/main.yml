@@ -1,0 +1,47 @@
+name: Update Ivy Repository
+
+on:
+  workflow_dispatch:
+    inputs:
+      ivy:
+        description: 'Ivy URL'
+        default: 'https://peramic.github.io/ivy'
+        required: true
+      maven:
+        description: 'Maven URL'
+        default: 'https://repo1.maven.org/maven2'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout App.3rdParty
+        uses: actions/checkout@v2
+      - name: Checkout ivy
+        uses: actions/checkout@v2
+        with:
+          repository: peramic/ivy
+          token: ${{ secrets.ACTIONS }}
+          path: ivy
+      - name: Reset ivy
+        uses: peramic/actions/git-reset@v1
+        with:
+          working-directory: ivy
+      - name: Build
+        id: build
+        uses: peramic/actions/build@v1
+        with:
+          arch: ${{ github.event.inputs.arch }}
+          script: './mkapp ${{ github.event.inputs.ivy }} linux-all on ${{ github.event.inputs.maven }}'
+          token: ${{ secrets.ACTIONS }}
+      - name: Generate index
+        uses: peramic/actions/generate-index@v1
+        with:
+          working-directory: ivy
+          content-include-pattern: ${{ '^[0-9]+\.[0-9]+(\.[a-zA-Z0-9]+)*(-[a-zA-Z0-9]+)*$' }}
+      - name: Publish ivy
+        uses: peramic/actions/git-push@v1
+        with:
+          working-directory: ivy
+          arguments: -u --force

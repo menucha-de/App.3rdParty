@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+	<info organisation="org/jibx" module="jibx-tools" status="integration" default="true" />
+
+	<configurations>
+		<conf name="default" visibility="public" />
+		<conf name="doc" visibility="public" />
+		<conf name="src" visibility="public" />
+	</configurations>
+
+	<publications>
+		<artifact name="jibx-tools" type="jar" ext="jar" conf="default" />
+		<artifact name="jibx-tools-javadoc" type="jar" ext="jar" conf="doc" />
+		<artifact name="jibx-tools-sources" type="jar" ext="jar" conf="src" />
+	</publications>
+
+	<dependencies>
+		<dependency org="org/jibx" name="jibx-schema" rev="${jibx.version}" conf="default" />
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.core.contenttype" rev="${org.eclipse.core.contenttype.version}" conf="default" />
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.core.jobs" rev="${org.eclipse.core.jobs.version}" conf="default" />
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.core.resources" rev="${org.eclipse.core.resources.version}" conf="default" />
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.core.runtime" rev="${org.eclipse.core.runtime.version}" conf="default" />
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.equinox.common" rev="${org.eclipse.equinox.common.version}" conf="default" />
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.equinox.preferences" rev="${org.eclipse.equinox.preferences.version}" conf="default" />
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.jdt.core" rev="${org.eclipse.jdt.core.version}" conf="default" />
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.osgi" rev="${org.eclipse.osgi.version}" conf="default" />
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.text" rev="${org.eclipse.text.version}" conf="default" />
+	</dependencies>
+
+</ivy-module>

@@ -1,0 +1,1 @@
+[License](https://opensource.org/licenses/BSD-2-Clause)

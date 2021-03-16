@@ -1,0 +1,2 @@
+[License](https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt)
+[Project](http://dev.mysql.com/doc/connector-j/en)

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+	<info organisation="org/jboss/resteasy" module="resteasy-jaxrs" status="integration" default="true" />
+
+	<configurations>
+		<conf name="default" />
+		<conf name="module" />
+		<conf name="src" />
+	</configurations>
+
+	<publications>
+		<artifact name="resteasy-jaxrs" conf="default,module" />
+		<artifact name="resteasy-jaxrs-sources" conf="src" />
+	</publications>
+
+	<dependencies>
+		<dependency org="javax/annotation" name="javax.annotation-api" rev="${javax.annotation-api.version}" conf="default;module->default" />
+		<dependency org="javax/ws/rs" name="javax.ws.rs-api" rev="${javax.ws.rs-api.version}" conf="default;module->default" />
+		<dependency org="org/jboss/logging" name="jboss-logging" rev="${jboss-logging.version}" conf="default;module->default" />
+	</dependencies>
+
+</ivy-module>

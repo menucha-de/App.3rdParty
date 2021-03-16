@@ -1,0 +1,891 @@
+<?xml version="1.0"?>
+<project name="havis.tools.3rdParty" default="publish" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:if="ant:if">
+	<property environment="env"/>
+	<property file="${basedir}/build.properties" />
+	<property name="resources.dir" location="${basedir}/resources" />
+	<property name="target.dir" location="${basedir}/target" />
+	<property name="javac.version" value="8" />
+
+	<property name="keyfile" value="${user.home}/.ssh/id_rsa" />
+
+	<!-- Checks if the build properties are set prints an error message otherwise -->
+	<target name="check.build.properties">
+		<condition property="ivy.resolver" else="local">
+			<isset property="ivy.resolver" />
+		</condition>
+		<condition property="is_remote">
+			<equals arg1="${ivy.resolver}" arg2="remote"/>
+		</condition>
+		<condition property="is_fs">
+			<equals arg1="${ivy.resolver}" arg2="remotefs"/>
+		</condition>
+		<fail message="Missing property 'repo.url'. Does 'build.properties' file exists?" unless="repo.url" />
+	</target>
+
+	<target name="setproxy" if="build.legacy">
+		<setproxy proxyhost="apt" proxyport="3128" nonproxyhosts="ivy" />
+	</target>
+
+	<target name="clean-cache" description="Cleans ivy cache">
+		<ivy:cleancache />
+	</target>
+
+	<target name="clean-local" depends="clean-cache" description="Cleans local ivy repository">
+		<delete dir="${ivy.default.ivy.user.dir}/local" includeemptydirs="true" />
+	</target>
+
+	<target name="clean" description="Cleans the project">
+		<delete dir="${target.dir}" includeemptydirs="true" />
+	</target>
+
+	<target name="clean-all" depends="clean, clean-cache" description="Cleans the project and local ivy repository" />
+
+	<macrodef name="enrich">
+		<attribute name="jar" />
+		<element name="attributes" optional="true" implicit="true" />
+		<sequential>
+			<unzip dest="${target.dir}" src="${target.dir}/@{jar}">
+				<patternset>
+					<include name="META-INF/MANIFEST.MF" />
+				</patternset>
+			</unzip>
+			<manifest file="${target.dir}/META-INF/MANIFEST.MF" mode="update">
+				<attributes />
+			</manifest>
+			<jar file="${target.dir}/@{jar}" update="true" manifest="${target.dir}/META-INF/MANIFEST.MF" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="publish">
+		<attribute name="org" />
+		<attribute name="name" />
+		<attribute name="rev" />
+		<attribute name="module" default="true" />
+		<attribute name="refresh" default="false" />
+		<attribute name="artifact" default="@{name}" />
+		<attribute name="jar" default="@{org}/@{name}/@{rev}/@{artifact}.jar" />
+		<element name="enrichments" optional="true" implicit="true" />
+		<sequential>
+			<local name="publish.current.version" />
+			<property name="publish.current.version" value="@{rev}"/>
+			<ivy:resolve file="${resources.dir}/@{org}/@{name}/ivy.xml" refresh="@{refresh}" />
+			<enrichments />
+			<local name="publish.module-info.present" />
+			<local name="publish.java9.path" />
+			<local name="publish.module-info.generate" />
+			<property name="publish.module-info.generate" value="@{module}"/>
+			<available file="${resources.dir}/@{org}/@{name}/module-info.java" property="publish.module-info.present" if:true="${publish.module-info.generate}" />
+			<sequential if:set="publish.module-info.present">
+				<echo message="${resources.dir}/@{org}/@{name}/module-info.java" />
+				<unjar dest="${target.dir}/@{org}/@{name}" src="${target.dir}/@{jar}">
+					<patternset>
+						<include name="**/*.class" />
+					</patternset>
+				</unjar>
+				<condition property="publish.java9.path" value="/usr/lib/jvm/java-9-openjdk-amd64/bin/" else="">
+			        <isset property="build.legacy"/>
+			    </condition>
+				<exec executable="${publish.java9.path}javac" failonerror="true">
+					<arg value="-d" />
+					<arg value="${target.dir}/@{org}/@{name}" />
+					<arg value="-p" />
+					<arg value="${target.dir}/modules" />
+					<arg value="${resources.dir}/@{org}/@{name}/module-info.java" />
+				</exec>
+				<jar file="${target.dir}/@{jar}" includes="module-info.class" basedir="${target.dir}/@{org}/@{name}" update="true" />
+				<symlink link="${target.dir}/modules/@{artifact}.jar" resource="../@{jar}" />
+			</sequential>
+			<ivy:publish resolver="${ivy.resolver}" pubrevision="@{rev}" status="integration" overwrite="true">
+				<artifacts pattern="${target.dir}/[orgPath]/[module]/[revision]/[artifact](-[classifier]).[ext]" />
+			</ivy:publish>
+		</sequential>
+	</macrodef>
+
+	<target name="publish" description="" depends="check.build.properties, clean, setproxy">
+
+		<scp keyfile="${keyfile}" todir="ivy@ivy:/srv/ivy/ant" trust="true" if:set="is_remote">
+			<fileset dir="${resources.dir}/ant" />
+		</scp>
+		<mkdir dir="${env.GITHUB_WORKSPACE}/ivy/ant" if:set="is_fs" />
+		<copy todir="${env.GITHUB_WORKSPACE}/ivy/ant" overwrite="true" if:set="is_fs">
+			<fileset dir="${resources.dir}/ant" />
+		</copy>
+
+		<ivy:cleancache />
+		
+		<ivy:retrieve pattern="${target.dir}/[orgPath]/[module]/[revision]/[artifact](-[classifier]).[ext]" />
+
+		<mkdir dir="${target.dir}/modules" />
+
+
+		<!-- javax -->
+		<publish org="javax/xml/bind" name="jaxb-api" rev="${jaxb.version}">
+			<enrich jar="@{org}/@{name}/@{rev}/jaxb-api.jar">
+				<attribute name="Import-Package" value="javax.xml.bind,javax.xml.bind.annotation,javax.xml.bind.annotation.adapters,javax.xml.bind.attachment,javax.xml.bind.helpers,javax.xml.bind.util,javax.xml.datatype,javax.xml.namespace,javax.xml.parsers,javax.xml.stream,javax.xml.transform,javax.xml.transform.dom,javax.xml.transform.sax,javax.xml.transform.stream,javax.xml.validation,org.w3c.dom,org.xml.sax,org.xml.sax.ext,org.xml.sax.helpers" />
+			</enrich>
+		</publish>
+		<publish org="javax/xml/ws" name="jaxws-api" rev="${jaxws-api.version}" />
+		<publish org="javax/annotation" name="javax.annotation-api" rev="${javax.annotation-api.version}" />
+		<publish org="javax/inject" name="javax.inject" rev="${javax.inject.version}" />
+		<publish org="javax/validation" name="validation-api" rev="${validation-api.version}" />
+		<publish org="javax/ws/rs" name="javax.ws.rs-api" rev="${javax.ws.rs-api.version}" />
+
+		<!-- com.sun.xml -->
+		<publish org="com/sun/xml/bind" name="jaxb-core" rev="${jaxb.version}" />
+		<publish org="com/sun/xml/bind" name="jaxb-impl" rev="${jaxb.version}">
+			<enrich jar="@{org}/@{name}/@{rev}/jaxb-impl.jar">
+				<attribute name="Bundle-Name" value="JAXB Implementation" />
+				<attribute name="Bundle-Version" value="${jaxb.version}" />
+				<attribute name="Bundle-SymbolicName" value="com.sun.xml.bind.jaxb-impl" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+			</enrich>
+		</publish>
+		<publish org="com/sun/xml/bind" name="jaxb-xjc" rev="${jaxb.version}" />
+		<publish org="com/sun/xml/stream/buffer" name="streambuffer" rev="${streambuffer.version}" />
+		<publish org="com/sun/xml/ws" name="jaxws-rt" rev="${jaxws.version}">
+			<enrich jar="@{org}/@{name}/@{rev}/jaxws-rt.jar">
+				<attribute name="Bundle-Name" value="JAX-WS Implementation" />
+				<attribute name="Bundle-Version" value="${jaxws.version}" />
+				<attribute name="Bundle-SymbolicName" value="com.sun.xml.ws.jaxws-rt" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Export-Package" value="com.sun.xml.ws.api.server" />
+			</enrich>
+		</publish>
+		<publish org="com/sun/xml/ws" name="jaxws-tools" rev="${jaxws.version}" />
+		<publish org="com/sun/xml/ws" name="policy" rev="${policy.version}" />
+
+		<!-- com.fasterxml.jackson -->
+		<publish org="com/fasterxml/jackson/core" name="jackson-annotations" rev="${jackson.version}" />
+		<publish org="com/fasterxml/jackson/core" name="jackson-core" rev="${jackson.version}" />
+		<publish org="com/fasterxml/jackson/core" name="jackson-databind" rev="${jackson.version}" />
+		<publish org="com/fasterxml/jackson/dataformat" name="jackson-dataformat-xml" rev="${jackson.version}" />
+		<publish org="com/fasterxml/jackson/jaxrs" name="jackson-jaxrs-base" rev="${jackson.version}" />
+		<publish org="com/fasterxml/jackson/module" name="jackson-module-jaxb-annotations" rev="${jackson.version}">
+			<enrich jar="@{org}/@{name}/@{rev}/jackson-module-jaxb-annotations.jar">
+				<attribute name="Import-Package" value="com.fasterxml.jackson.annotation,com.fasterxml.jackson.core,com.fasterxml.jackson.core.type,com.fasterxml.jackson.core.util,com.fasterxml.jackson.databind,com.fasterxml.jackson.databind.annotation,com.fasterxml.jackson.databind.cfg,com.fasterxml.jackson.databind.deser,com.fasterxml.jackson.databind.deser.std,com.fasterxml.jackson.databind.introspect,com.fasterxml.jackson.databind.jsonFormatVisitors,com.fasterxml.jackson.databind.jsonschema,com.fasterxml.jackson.databind.jsontype,com.fasterxml.jackson.databind.jsontype.impl,com.fasterxml.jackson.databind.module,com.fasterxml.jackson.databind.node,com.fasterxml.jackson.databind.ser,com.fasterxml.jackson.databind.ser.std,com.fasterxml.jackson.databind.type,com.fasterxml.jackson.databind.util,javax.xml.bind,javax.xml.bind.annotation,javax.xml.bind.annotation.adapters,javax.xml.parsers,org.w3c.dom" />
+			</enrich>
+		</publish>
+		<publish org="com/fasterxml/jackson/jaxrs" name="jackson-jaxrs-json-provider" rev="${jackson.version}" />
+
+		<!-- libmatthew-debug-java (stretch) -->
+		<publish org="cx/ath/matthew/utils" name="hexdump" rev="${hexdump.version}">
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="Hexdump" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Export-Package" value="cx.ath.matthew.utils" />
+			</enrich>
+		</publish>
+
+		<!-- io.netty -->
+		<publish org="io/netty" name="netty" rev="${netty.camel-netty.version}" />
+		<publish org="io/netty" name="netty-common" rev="${netty.version}" />
+		<publish org="io/netty" name="netty-buffer" rev="${netty.version}" />
+		<publish org="io/netty" name="netty-resolver" rev="${netty.version}" />
+		<publish org="io/netty" name="netty-transport" rev="${netty.version}" />
+		<publish org="io/netty" name="netty-codec" rev="${netty.version}" />
+		<publish org="io/netty" name="netty-handler" rev="${netty.version}" />
+		<publish org="io/netty" name="netty-codec-http" rev="${netty.version}" />
+
+		<!-- org.jboss.logging -->
+		<publish org="org/jboss/logging" name="jboss-logging" rev="${jboss-logging.version}" />
+
+		<!-- org.jboss.resteasy -->
+		<publish org="org/jboss/resteasy" name="resteasy-jaxrs" rev="${resteasy-legacy.version}" module="false">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="META-INF/services/javax.ws.rs.ext.Providers" />
+			</exec>
+			<unjar dest="${target.dir}/@{org}/@{name}/@{rev}" src="${target.dir}/@{org}/@{name}/@{rev}/@{name}-sources.jar">
+				<patternset>
+					<include name="@{org}/spi/metadata/SetterParameter.java" />
+				</patternset>
+			</unjar>
+			<replace file="${target.dir}/@{org}/@{name}/@{rev}/@{org}/spi/metadata/SetterParameter.java" token="import java.beans.Introspector;" />
+			<javac destdir="${target.dir}/@{org}/@{name}/@{rev}" classpath="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" release="${javac.version}" includeantruntime="false">
+				<src path="${target.dir}/@{org}/@{name}/@{rev}" />
+				<src path="${resources.dir}/@{org}/@{name}" />
+				<include name="@{org}/spi/metadata/*.java" />
+			</javac>
+			<jar file="${target.dir}/@{jar}" includes="@{org}/spi/metadata/SetterParameter.class @{org}/spi/metadata/Introspector.class" basedir="${target.dir}/@{org}/@{name}/@{rev}" update="true" />
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="RESTEasy JAX-RS" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{org}/@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="javax.annotation;version=&quot;1.2&quot;,javax.ws.rs,javax.ws.rs.client,javax.ws.rs.container,javax.ws.rs.core,javax.ws.rs.ext,org.slf4j;resolution:=optional" />
+				<attribute name="Export-Package" value="org.jboss.resteasy.annotations,org.jboss.resteasy.core,org.jboss.resteasy.logging,org.jboss.resteasy.plugins.delegates,org.jboss.resteasy.plugins.providers,org.jboss.resteasy.plugins.server,org.jboss.resteasy.specimpl,org.jboss.resteasy.spi,org.jboss.resteasy.spi.interception,org.jboss.resteasy.spi.metadata,org.jboss.resteasy.util,org.jboss.resteasy.core.interception,org.jboss.resteasy.plugins.interceptors" />
+			</enrich>
+		</publish>
+		<publish org="org/jboss/resteasy" name="resteasy-jaxb-provider" rev="${resteasy-legacy.version}" module="false">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="META-INF/services/javax.ws.rs.ext.Providers" />
+			</exec>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="RESTEasy JAXB Provider" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{org}/@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="javax.ws.rs,javax.ws.rs.core,javax.ws.rs.ext,javax.xml.bind,javax.xml.bind.annotation,javax.xml.parsers,javax.xml.transform.sax,org.jboss.resteasy.annotations,org.jboss.resteasy.core.interception,org.jboss.resteasy.logging,org.jboss.resteasy.plugins.providers,org.jboss.resteasy.spi,org.jboss.resteasy.spi.interception,org.jboss.resteasy.spi.metadata,org.jboss.resteasy.util,org.w3c.dom,org.xml.sax" />
+				<attribute name="Export-Package" value="org.jboss.resteasy.plugins.providers.jaxb" />
+			</enrich>
+		</publish>
+		<publish org="org/jboss/resteasy" name="resteasy-jackson2-provider" rev="${resteasy-legacy.version}" module="false">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="META-INF/services/javax.ws.rs.ext.Providers" />
+			</exec>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="RESTEasy Jackson Provider" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{org}/@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="com.fasterxml.jackson.core,com.fasterxml.jackson.databind,com.fasterxml.jackson.databind.type,com.fasterxml.jackson.jaxrs.cfg,com.fasterxml.jackson.jaxrs.json,com.fasterxml.jackson.jaxrs.util,javax.ws.rs.core,org.jboss.resteasy.util" />
+				<attribute name="Export-Package" value="org.jboss.resteasy.plugins.providers.jackson" />
+			</enrich>
+		</publish>
+		<publish org="org/jboss/resteasy" name="resteasy-multipart-provider" rev="${resteasy-legacy.version}" module="false">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="META-INF/services/javax.ws.rs.ext.Providers" />
+			</exec>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="RESTEasy Multipart Provider" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{org}/@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="javax.ws.rs,javax.ws.rs.core,javax.ws.rs.ext,org.jboss.resteasy.util,org.apache.james.mime4j.field,org.apache.james.mime4j.message,org.apache.james.mime4j.parser,org.jboss.resteasy.spi,org.jboss.resteasy.spi.interception,org.jboss.resteasy.spi.metadata,org.apache.james.mime4j.codec,org.apache.james.mime4j.descriptor,org.apache.james.mime4j.storage,org.apache.james.mime4j" />
+				<attribute name="Export-Package" value="org.jboss.resteasy.plugins.providers.multipart" />
+			</enrich>
+		</publish>
+		<publish org="org/jboss/resteasy" name="resteasy-client" rev="${resteasy-legacy.version}" module="false" />
+		<publish org="org/jboss/resteasy" name="resteasy-jdk-http" rev="${resteasy-legacy.version}" module="false">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="org/jboss/resteasy/test/*" />
+			</exec>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="RESTEasy Sun JDK HTTP Server Integration" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{org}/@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="com.sun.net.httpserver,javax.ws.rs.core,javax.ws.rs.ext,org.jboss.resteasy.annotations,org.jboss.resteasy.core,org.jboss.resteasy.logging,org.jboss.resteasy.plugins.server,org.jboss.resteasy.specimpl,org.jboss.resteasy.spi,org.jboss.resteasy.spi.interception,org.jboss.resteasy.spi.metadata,org.jboss.resteasy.util" />
+				<attribute name="Export-Package" value="org.jboss.resteasy.plugins.server.sun.http" />
+			</enrich>
+		</publish>
+		<publish org="org/jboss/resteasy" name="resteasy-netty4" rev="${resteasy-legacy.version}" module="false">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="org/jboss/resteasy/test/*" />
+			</exec>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="RESTEasy Netty 4 Integration" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{org}/@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="javax.ws.rs.core,javax.ws.rs.ext,org.jboss.resteasy.annotations,org.jboss.resteasy.core,org.jboss.resteasy.logging,org.jboss.resteasy.plugins.server,org.jboss.resteasy.specimpl,org.jboss.resteasy.spi,org.jboss.resteasy.spi.interception,org.jboss.resteasy.spi.metadata,org.jboss.resteasy.util" />
+				<attribute name="Export-Package" value="org.jboss.resteasy.plugins.server.netty" />
+			</enrich>
+		</publish>
+		
+		<!-- We want to publish another resteasy version. For some reason the jackson "ivy.xml"
+                     in the ivy cache folder is broken (doesn't contain the "module" configuration),
+                     therefore we delete all jackson dependencies from the cache -->
+		<delete dir="${env.GITHUB_WORKSPACE}/.ivy2/cache/com/fasterxml/jackson" />
+
+		<!-- org.jboss.resteasy -->
+		<publish org="org/jboss/resteasy" name="resteasy-jaxrs" rev="${resteasy.version}">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="META-INF/services/javax.ws.rs.ext.Providers" />
+			</exec>
+			<unjar dest="${target.dir}/@{org}/@{name}/@{rev}" src="${target.dir}/@{org}/@{name}/@{rev}/@{name}-sources.jar">
+				<patternset>
+					<include name="@{org}/spi/metadata/SetterParameter.java" />
+				</patternset>
+			</unjar>
+			<replace file="${target.dir}/@{org}/@{name}/@{rev}/@{org}/spi/metadata/SetterParameter.java" token="import java.beans.Introspector;" />
+			<javac destdir="${target.dir}/@{org}/@{name}/@{rev}" classpath="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" release="${javac.version}" includeantruntime="false">
+				<src path="${target.dir}/@{org}/@{name}/@{rev}" />
+				<src path="${resources.dir}/@{org}/@{name}" />
+				<include name="@{org}/spi/metadata/*.java" />
+			</javac>
+			<jar file="${target.dir}/@{jar}" includes="@{org}/spi/metadata/SetterParameter.class @{org}/spi/metadata/Introspector.class" basedir="${target.dir}/@{org}/@{name}/@{rev}" update="true" />
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="RESTEasy JAX-RS" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{org}/@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="javax.annotation;version=&quot;1.2&quot;,javax.ws.rs,javax.ws.rs.client,javax.ws.rs.container,javax.ws.rs.core,javax.ws.rs.ext,org.slf4j;resolution:=optional" />
+				<attribute name="Export-Package" value="org.jboss.resteasy.annotations,org.jboss.resteasy.core,org.jboss.resteasy.logging,org.jboss.resteasy.plugins.delegates,org.jboss.resteasy.plugins.providers,org.jboss.resteasy.plugins.server,org.jboss.resteasy.specimpl,org.jboss.resteasy.spi,org.jboss.resteasy.spi.interception,org.jboss.resteasy.spi.metadata,org.jboss.resteasy.util,org.jboss.resteasy.core.interception,org.jboss.resteasy.plugins.interceptors" />
+			</enrich>
+		</publish>
+		<publish org="org/jboss/resteasy" name="resteasy-jaxb-provider" rev="${resteasy.version}">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="META-INF/services/javax.ws.rs.ext.Providers" />
+			</exec>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="RESTEasy JAXB Provider" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{org}/@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="javax.ws.rs,javax.ws.rs.core,javax.ws.rs.ext,javax.xml.bind,javax.xml.bind.annotation,javax.xml.parsers,javax.xml.transform.sax,org.jboss.resteasy.annotations,org.jboss.resteasy.core.interception,org.jboss.resteasy.logging,org.jboss.resteasy.plugins.providers,org.jboss.resteasy.spi,org.jboss.resteasy.spi.interception,org.jboss.resteasy.spi.metadata,org.jboss.resteasy.util,org.w3c.dom,org.xml.sax" />
+				<attribute name="Export-Package" value="org.jboss.resteasy.plugins.providers.jaxb" />
+			</enrich>
+		</publish>
+		<publish org="org/jboss/resteasy" name="resteasy-jackson2-provider" rev="${resteasy.version}">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="META-INF/services/javax.ws.rs.ext.Providers" />
+			</exec>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="RESTEasy Jackson Provider" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{org}/@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="com.fasterxml.jackson.core,com.fasterxml.jackson.databind,com.fasterxml.jackson.databind.type,com.fasterxml.jackson.jaxrs.cfg,com.fasterxml.jackson.jaxrs.json,com.fasterxml.jackson.jaxrs.util,javax.ws.rs.core,org.jboss.resteasy.util" />
+				<attribute name="Export-Package" value="org.jboss.resteasy.plugins.providers.jackson" />
+			</enrich>
+		</publish>
+		<publish org="org/jboss/resteasy" name="resteasy-multipart-provider" rev="${resteasy.version}">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="META-INF/services/javax.ws.rs.ext.Providers" />
+			</exec>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="RESTEasy Multipart Provider" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{org}/@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="javax.ws.rs,javax.ws.rs.core,javax.ws.rs.ext,org.jboss.resteasy.util,org.apache.james.mime4j.field,org.apache.james.mime4j.message,org.apache.james.mime4j.parser,org.jboss.resteasy.spi,org.jboss.resteasy.spi.interception,org.jboss.resteasy.spi.metadata,org.apache.james.mime4j.codec,org.apache.james.mime4j.descriptor,org.apache.james.mime4j.storage,org.apache.james.mime4j" />
+				<attribute name="Export-Package" value="org.jboss.resteasy.plugins.providers.multipart" />
+			</enrich>
+		</publish>
+		<publish org="org/jboss/resteasy" name="resteasy-client" rev="${resteasy.version}" />
+		<publish org="org/jboss/resteasy" name="resteasy-jdk-http" rev="${resteasy.version}">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="org/jboss/resteasy/test/*" />
+			</exec>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="RESTEasy Sun JDK HTTP Server Integration" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{org}/@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="com.sun.net.httpserver,javax.ws.rs.core,javax.ws.rs.ext,org.jboss.resteasy.annotations,org.jboss.resteasy.core,org.jboss.resteasy.logging,org.jboss.resteasy.plugins.server,org.jboss.resteasy.specimpl,org.jboss.resteasy.spi,org.jboss.resteasy.spi.interception,org.jboss.resteasy.spi.metadata,org.jboss.resteasy.util" />
+				<attribute name="Export-Package" value="org.jboss.resteasy.plugins.server.sun.http" />
+			</enrich>
+		</publish>
+		<publish org="org/jboss/resteasy" name="resteasy-netty4" rev="${resteasy.version}">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="org/jboss/resteasy/test/*" />
+			</exec>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="RESTEasy Netty 4 Integration" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{org}/@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="javax.ws.rs.core,javax.ws.rs.ext,org.jboss.resteasy.annotations,org.jboss.resteasy.core,org.jboss.resteasy.logging,org.jboss.resteasy.plugins.server,org.jboss.resteasy.specimpl,org.jboss.resteasy.spi,org.jboss.resteasy.spi.interception,org.jboss.resteasy.spi.metadata,org.jboss.resteasy.util" />
+				<attribute name="Export-Package" value="org.jboss.resteasy.plugins.server.netty" />
+			</enrich>
+		</publish>
+
+		<!-- org.java-websocket -->
+		<publish org="org/java-websocket" name="Java-WebSocket" rev="${java-websocket.version}" />
+
+		<!-- libdbus-java (stretch) -->
+		<publish org="org/freedesktop" name="dbus" rev="${dbus.version}">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="dbusjava_localized*.class" />
+			</exec>
+			<javac srcdir="${resources.dir}/@{org}/@{name}" includes="Gettext.java" destdir="${target.dir}" release="${javac.version}" includeantruntime="false" />
+			<jar file="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" update="true">
+				<fileset dir="${target.dir}" includes="@{org}/@{name}/Gettext.class" />
+			</jar>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="DBus" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="cx.ath.matthew.utils" />
+				<attribute name="Export-Package" value="org.freedesktop,org.freedesktop.dbus,org.freedesktop.dbus.exceptions" />
+			</enrich>
+		</publish>
+
+		<!-- aopalliance -->
+		<publish org="aopalliance" name="aopalliance" rev="${aopalliance.version}" />
+
+		<!-- bcel -->
+		<publish org="org/apache/bcel" name="bcel" rev="${bcel.version}" />
+
+		<!-- ch.qos.logback -->
+		<publish org="ch/qos/logback" name="logback-core" rev="${logback.version}" />
+		<publish org="ch/qos/logback" name="logback-classic" rev="${logback.version}" />
+
+		<!-- colt -->
+		<publish org="colt" name="colt" rev="${colt.version}" />
+
+		<!-- com.github.gwtd3 -->
+		<publish org="com/github/gwtd3" name="gwt-d3-api" rev="${gwt-d3-api.version}" />
+		<publish org="com/github/gwtd3" name="gwt-d3-js" rev="${gwt-d3-js.version}" />
+
+		<!-- com.github.nmorel.gwtjackson -->
+		<publish org="com/github/nmorel/gwtjackson" name="gwt-jackson" rev="${gwt-jackson.version}" />
+
+		<!-- com.google.code -->
+		<publish org="com/google/code/gson" name="gson" rev="${gson.version}" />
+		<publish org="com/google/code/javaparser" name="javaparser" rev="${javaparser.version}" />
+
+		<!-- com.google.gwt -->
+		<publish org="com/google/gwt" name="gwt-dev" rev="${gwt.version}" />
+		<publish org="com/google/gwt" name="gwt-elemental" rev="${gwt.version}" />
+		<publish org="com/google/gwt" name="gwt-servlet" rev="${gwt.version}" />
+		<publish org="com/google/gwt" name="gwt-user" rev="${gwt.version}" />
+		<publish org="com/google/guava" name="guava" rev="${com.google.guava.version}" />
+		<publish org="com/google/gwt/inject" name="gin" rev="${com.google.gin.version}" />
+		<publish org="com/google/inject" name="guice" rev="${com.google.guice.version}" />
+		<publish org="com/google/inject/extensions" name="guice-assistedinject" rev="${com.google.guice.version}" />
+		<publish org="com/google/jsinterop" name="jsinterop-annotations" rev="${jsinterop.version}" />
+
+		<!-- com.h2database -->
+		<publish org="com/h2database" name="h2" rev="${h2.version}">
+			<enrich jar="@{org}/@{name}/@{rev}/h2.jar">
+				<attribute name="Import-Package" value="javax.naming;resolution:=optional,javax.naming.spi;resolution:=optional,javax.net,javax.net.ssl,javax.sql,javax.tools;resolution:=optional,javax.transaction.xa;resolution:=optional,org.osgi.framework,org.osgi.service.jdbc;resolution:=optional" />
+			</enrich>
+		</publish>
+
+		<!-- jSerialComm -->
+		<publish org="com/fazecast" name="jSerialComm" rev="${jserial.version}">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg line="Android/* OSX/* Windows/* Linux/armv5* Linux/armv6* Linux/armv8*" />
+			</exec>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="jSerialComm" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Export-Package" value="com.fazecast.jSerialComm" />
+			</enrich>
+		</publish>
+
+		<!-- com.microsoft.sqlserver.jdbc -->
+		<publish org="com/microsoft/sqlserver/jdbc" name="sqljdbc" rev="${sqljdbc.version}">
+			<enrich jar="@{org}/@{name}/@{rev}/sqljdbc.jar">
+				<attribute name="Bundle-Name" value="Microsoft JDBC Driver for SQL Server" />
+				<attribute name="Bundle-SymbolicName" value="com.microsoft.sqlserver.jdbc.sqljdbc" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Bundle-Vendor" value="Microsoft" />
+				<attribute name="Export-Package" value="com.microsoft.sqlserver.jdbc" />
+				<attribute name="Import-Package" value="javax.net.ssl" />
+			</enrich>
+		</publish>
+
+		<!-- com.nordicid -->
+		<publish org="com/nordicid" name="firmware" rev="${com.nordicid.firmware.version}" />
+		<publish org="com/nordicid" name="nurapi" rev="${nordicid.version}">
+			<enrich jar="@{org}/@{name}/@{rev}/NurApi.jar">
+				<attribute name="Bundle-Name" value="NUR API" />
+				<attribute name="Bundle-SymbolicName" value="com.nordicid.nurapi" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Bundle-Vendor" value="Nordic ID" />
+				<attribute name="Export-Package" value="com.nordicid.nurapi" />
+			</enrich>
+		</publish>
+
+		<!-- qdox -->
+		<publish org="com/thoughtworks/qdox" name="qdox" rev="${qdox.version}" />
+
+		<!-- commons -->
+		<publish org="commons-cli" name="commons-cli" rev="${commons-cli.version}" />
+		<publish org="commons-codec" name="commons-codec" rev="${commons-codec.version}" />
+		<publish org="commons-io" name="commons-io" rev="${commons-io.version}" />
+		<publish org="commons-logging" name="commons-logging" rev="${commons-logging.version}" />
+
+		<!-- de.feig.obid -->
+		<publish org="de/feig" name="obid" rev="${de.feig.obid.version}">
+			<unjar dest="${target.dir}/@{org}/@{name}" src="${target.dir}/@{org}/@{name}/@{rev}/OBIDISC4J_API-javadoc.jar">
+				<patternset>
+					<include name="javadoc/de/feig/**" />
+				</patternset>
+			</unjar>
+			<jar file="${target.dir}/@{org}/@{name}/@{rev}/OBIDISC4J-javadoc.jar" update="true">
+				<fileset dir="${target.dir}/@{org}/@{name}" includes="javadoc/**" />
+			</jar>
+			<unjar dest="${target.dir}/@{org}/@{name}" src="${target.dir}/@{org}/@{name}/@{rev}/OBIDISC4J_API.jar">
+				<patternset>
+					<include name="@{org}/**" />
+				</patternset>
+			</unjar>
+			<jar file="${target.dir}/@{org}/@{name}/@{rev}/OBIDISC4J.jar" update="true">
+				<fileset dir="${target.dir}/@{org}/@{name}" includes="@{org}/**" />
+			</jar>
+			<enrich jar="@{org}/@{name}/@{rev}/OBIDISC4J.jar">
+				<attribute name="Bundle-Name" value="FEIG OBID" />
+				<attribute name="Bundle-SymbolicName" value="de.feig.obid" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Bundle-Vendor" value="FEIG ELECTRONIC GmbH" />
+				<attribute name="Export-Package" value="de.feig,de.feig.ReaderCommand,de.feig.ReaderConfig,de.feig.TagHandler,de.feig.FEDM.Core,de.feig.FEDM.Core.ExternalDevice,de.feig.FEDM.Core.ReaderCommand,de.feig.FEDM.Core.ReaderConfig,de.feig.FEDM.Core.TagHandler,de.feig.FEDM.Core.Utility" />
+			</enrich>
+		</publish>
+		<publish org="de/feig" name="obid-linux-amd64" rev="${de.feig.obid.version}">
+			<jar file="${target.dir}/@{org}/@{name}/@{rev}/OBIDISC4J-linux-amd64.jar">
+				<mappedresources>
+					<fileset dir="${target.dir}/@{org}/@{name}/@{rev}" includes="libobidisc4j.so.*" />
+					<globmapper from="libobidisc4j.so.*" to="libobidisc4j.so" />
+				</mappedresources>
+				<manifest>
+					<attribute name="Bundle-Name" value="FEIG Native OBID" />
+					<attribute name="Bundle-SymbolicName" value="de.feig.obid-linux-amd64" />
+					<attribute name="Bundle-NativeCode" value="libobidisc4j.so;osname=linux;processor=amd64" />
+					<attribute name="Bundle-Version" value="@{rev}" />
+					<attribute name="Bundle-ManifestVersion" value="2" />
+					<attribute name="Bundle-Vendor" value="FEIG ELECTRONIC GmbH" />
+					<attribute name="Fragment-Host" value="de.feig.obid" />
+				</manifest>
+			</jar>
+		</publish>
+		<publish org="de/feig" name="obid-linux-arm" rev="${de.feig.obid.version}">
+			<jar file="${target.dir}/@{org}/@{name}/@{rev}/OBIDISC4J-linux-arm.jar">
+				<mappedresources>
+					<fileset dir="${target.dir}/@{org}/@{name}/@{rev}" includes="libobidisc4j.so.*" />
+					<globmapper from="libobidisc4j.so.*" to="libobidisc4j.so" />
+				</mappedresources>
+				<manifest>
+					<attribute name="Bundle-Name" value="FEIG Native OBID" />
+					<attribute name="Bundle-SymbolicName" value="de.feig.obid-linux-arm" />
+					<attribute name="Bundle-NativeCode" value="libobidisc4j.so;osname=linux;processor=arm" />
+					<attribute name="Bundle-Version" value="@{rev}" />
+					<attribute name="Bundle-ManifestVersion" value="2" />
+					<attribute name="Bundle-Vendor" value="FEIG ELECTRONIC GmbH" />
+					<attribute name="Fragment-Host" value="de.feig.obid" />
+				</manifest>
+			</jar>
+		</publish>
+
+		<!-- jcifs -->
+		<publish org="jcifs" name="jcifs" rev="${jcifs.version}" />
+
+		<!-- joda-time -->
+		<publish org="joda-time" name="joda-time" rev="${joda-time.version}" />
+
+		<!-- junit -->
+		<publish org="junit" name="junit" rev="${junit.version}" />
+
+		<!-- log4j -->
+		<publish org="log4j" name="log4j" rev="${log4j.version}" />
+
+		<!-- mysql -->
+		<publish org="mysql" name="mysql-connector-java" rev="${mysql.version}" />
+
+		<!-- saxon -->
+		<publish org="net/sf/saxon" name="Saxon-HE" rev="${saxon.version}">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="META-INF/SAXONICA.*" />
+			</exec>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="Saxon HE" />
+				<attribute name="Bundle-Version" value="9.6.0" />
+				<attribute name="Bundle-SymbolicName" value="net.sf.saxon.Saxon-HE" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="javax.xml.datatype,javax.xml.namespace,javax.xml.parsers,javax.xml.stream,javax.xml.stream.events,javax.xml.transform,javax.xml.transform.dom,javax.xml.transform.sax,javax.xml.transform.stax,javax.xml.transform.stream,javax.xml.xpath,org.w3c.dom,org.xml.sax,org.xml.sax.ext,org.xml.sax.helpers" />
+				<attribute name="Export-Package" value="net.sf.saxon" />
+			</enrich>
+		</publish>
+
+		<!-- supercsv -->
+		<publish org="net/sf/supercsv" name="super-csv" rev="${supercsv.version}" />
+
+		<!-- org.apache.ant -->
+		<publish org="org/apache/ant" name="ant" rev="${org.apache.ant.version}" />
+
+		<!-- stringtemplate -->
+		<publish org="org/antlr" name="ST4" rev="${stringtemplate.version}" />
+
+		<!-- antlr-runtime -->
+		<publish org="org/antlr" name="antlr-runtime" rev="${antlr-runtime.version}" />
+
+		<!-- org.slf4j -->
+		<publish org="org/slf4j" name="slf4j-api" rev="${slf4j.version}" />
+		<publish org="org/slf4j" name="slf4j-jdk14" rev="${slf4j.version}" />
+		<publish org="org/slf4j" name="jul-to-slf4j" rev="${slf4j.version}" />
+
+		<!-- org.apache.commons -->
+		<publish org="org/apache/commons" name="commons-lang3" rev="${commons-lang3.version}" />
+		<publish org="org/apache/commons" name="commons-math3" rev="${commons-math3.version}" />
+
+		<!-- org.apache.edgent -->
+		<publish org="org/apache/edgent" name="edgent-api-execution" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-api-function" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-api-graph" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-api-oplet" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-api-topology" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-api-window" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-analytics-math3" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-analytics-sensors" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-connectors-iot" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-connectors-common" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-connectors-mqtt" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-runtime-jsoncontrol" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-spi-graph" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-spi-topology" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-runtime-etiao" rev="${edgent.version}" />
+		<publish org="org/apache/edgent" name="edgent-providers-direct" rev="${edgent.version}" />
+
+		<!-- org.apache.httpcomponents -->
+		<publish org="org/apache/httpcomponents" name="httpclient" rev="${httpclient.version}" />
+		<publish org="org/apache/httpcomponents" name="httpcore" rev="${httpcore.version}" />
+
+		<!-- org.apache.felix -->
+		<publish org="org/apache/felix" name="main" rev="${org.apache.felix.version}" />
+		<publish org="org/apache/felix" name="framework" rev="${org.apache.felix.version}" />
+		<publish org="org/apache/felix" name="resolver" rev="${org.apache.felix.resolver.version}" />
+
+		<!-- org.apache.felix.bundlerepository -->
+		<publish org="org/apache/felix" name="bundlerepository" rev="${org.apache.felix.bundlerepository.version}" />
+
+		<!-- org.apache.felix.configadmin -->
+		<publish org="org/apache/felix" name="configadmin" rev="${org.apache.felix.configadmin.version}" />
+
+		<!-- org.apache.felix.eventadmin -->
+		<publish org="org/apache/felix" name="eventadmin" rev="${org.apache.felix.eventadmin.version}" />
+
+		<!-- org.apache.felix.gogo.command -->
+		<publish org="org/apache/felix/gogo" name="command" rev="${org.apache.felix.gogo.command.version}" />
+
+		<!-- org.apache.felix.gogo.runtime -->
+		<publish org="org/apache/felix/gogo" name="runtime" rev="${org.apache.felix.gogo.runtime.version}" />
+
+		<!-- org.apache.felix.gogo.shell -->
+		<publish org="org/apache/felix/gogo" name="shell" rev="${org.apache.felix.gogo.shell.version}" />
+
+		<!-- org.apache.james.mime4j -->
+		<publish org="org/apache/james" name="mime4j" rev="${mime4j.version}" />
+
+		<!-- org.eclipse.paho -->
+		<publish org="org/eclipse/paho" name="org.eclipse.paho.client.mqttv3" rev="${paho.version}">
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="META-INF/ECLIPSE_.*" />
+			</exec>
+		</publish>
+
+		<!-- com/microsoft/azure/sdk/iot -->
+		<publish org="com/microsoft/azure/sdk/iot" name="iot-deps" rev="${iot-deps.version}">
+			<mkdir dir="${target.dir}/iot-deps" />
+			<javac srcdir="${resources.dir}/@{org}/@{name}/@{org}" includes="**/*.java" destdir="${target.dir}/iot-deps" classpath="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" release="${javac.version}" includeantruntime="false" />
+			<jar file="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" update="true">
+				<fileset dir="${target.dir}/iot-deps" includes="**/*.class" />
+			</jar>
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="META-INF/MSFTSIG.*" />
+			</exec>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="Microsoft Azure IoT Deps" />
+				<attribute name="Bundle-SymbolicName" value="com.microsoft.azure.sdk.iot.iot-deps" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Bundle-Vendor" value="Microsoft" />
+				<attribute name="Export-Package" value="com.microsoft.azure.sdk.iot.deps.auth,com.microsoft.azure.sdk.iot.deps.transport.http,com.microsoft.azure.sdk.iot.deps.transport.mqtt,com.microsoft.azure.sdk.iot.deps.util" />
+				<attribute name="Import-Package" value="org.eclipse.paho.client.mqttv3,org.eclipse.paho.client.mqttv3.persist" />
+			</enrich>
+		</publish>
+
+		<!-- com/microsoft/azure/sdk/iot -->
+		<publish org="com/microsoft/azure/sdk/iot" name="iot-device-client" rev="${iot-device-client.version}">
+			<mkdir dir="${target.dir}/iot-device-client" />
+			<javac destdir="${target.dir}/iot-device-client" release="${javac.version}" includeantruntime="false">
+				<src path="${resources.dir}/@{org}/@{name}/org" />
+				<include name="**/*.java" />
+			</javac>
+			<jar file="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" update="true">
+				<fileset dir="${target.dir}/iot-device-client" includes="**/*.class" />
+			</jar>
+			<exec executable="zip">
+				<arg value="-d" />
+				<arg value="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+				<arg value="META-INF/MSFTSIG.*" />
+			</exec>
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="Microsoft Azure IoT Device Client SDK" />
+				<attribute name="Bundle-SymbolicName" value="com.microsoft.azure.sdk.iot.iot-device-client" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Bundle-Vendor" value="Microsoft" />
+				<attribute name="Export-Package" value="com.microsoft.azure.sdk.iot.device,com.microsoft.azure.sdk.iot.device.transport" />
+				<attribute name="Import-Package" value="javax.crypto,javax.crypto.spec,javax.net.ssl,com.microsoft.azure.sdk.iot.deps.transport.http,com.microsoft.azure.sdk.iot.deps.transport.mqtt,com.microsoft.azure.sdk.iot.deps.util,org.eclipse.paho.client.mqttv3,org.eclipse.paho.client.mqttv3.persist,org.slf4j" />
+			</enrich>
+		</publish>
+
+		<!-- org.fusesource.restygwt -->
+		<publish org="org/fusesource/restygwt" name="restygwt" rev="${restygwt.version}">
+			<mkdir dir="${target.dir}/restygwt" />
+			<javac srcdir="${resources.dir}/@{org}/@{name}/patches" includes="**/*.java" destdir="${target.dir}/restygwt" includeantruntime="false" release="${javac.version}" debug="true">
+				<classpath>
+					<pathelement location="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+					<pathelement location="${target.dir}/com/google/gwt/gwt-dev/${gwt.version}/gwt-dev.jar" />
+					<pathelement location="${target.dir}/com/google/gwt/gwt-user/${gwt.version}/gwt-user.jar" />
+				</classpath>
+			</javac>
+			<jar file="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" update="true">
+				<fileset dir="${target.dir}/restygwt" includes="**/*.class" />
+			</jar>
+			<jar file="${target.dir}/@{org}/@{name}/@{rev}/@{name}-sources.jar" update="true">
+				<fileset dir="${resources.dir}/@{org}/@{name}/patches" includes="**/*java" />
+			</jar>
+		</publish>
+
+		<!-- org.glassfish.gmbal -->
+		<publish org="org/glassfish/gmbal" name="gmbal-api-only" rev="${gmbal.version}">
+			<enrich jar="@{org}/@{name}/@{rev}/gmbal-api-only.jar">
+				<attribute name="Import-Package" value="javax.management,javax.management.modelmbean,org.glassfish.gmbal,org.glassfish.pfl.tf.timer.spi;resolution:=optional" />
+			</enrich>
+		</publish>
+
+		<!-- org.hamcrest.hamcrest-core -->
+		<publish org="org/hamcrest" name="hamcrest-core" rev="${hamcrest-core.version}" />
+
+		<!-- org.jibx -->
+		<publish org="org/jibx" name="jibx-bind" rev="${jibx.version}" />
+		<publish org="org/jibx" name="jibx-extras" rev="${jibx.version}" />
+		<publish org="org/jibx" name="jibx-run" rev="${jibx.version}" />
+		<publish org="org/jibx" name="jibx-schema" rev="${jibx.version}" />
+		<publish org="org/jibx" name="jibx-tools" rev="${jibx.version}" />
+		<publish org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.core.contenttype" rev="${org.eclipse.core.contenttype.version}" />
+		<publish org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.core.jobs" rev="${org.eclipse.core.jobs.version}" />
+		<publish org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.core.resources" rev="${org.eclipse.core.resources.version}" />
+		<publish org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.core.runtime" rev="${org.eclipse.core.runtime.version}" />
+		<publish org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.equinox.common" rev="${org.eclipse.equinox.common.version}" />
+		<publish org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.equinox.preferences" rev="${org.eclipse.equinox.preferences.version}" />
+		<publish org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.jdt.core" rev="${org.eclipse.jdt.core.version}" />
+		<publish org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.osgi" rev="${org.eclipse.osgi.version}" />
+		<publish org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.text" rev="${org.eclipse.text.version}" />
+
+		<!-- org.jmockit -->
+		<publish org="org/jmockit" name="jmockit" rev="${jmockit.version}" />
+		<publish org="org/jmockit" name="jmockit-coverage" rev="${jmockit.version}" />
+
+		<!-- org.jvnet.annox -->
+		<publish org="org/jvnet/annox" name="annox" rev="${annox.version}" />
+
+		<!-- org.jvnet.jaxb2_commons -->
+		<publish org="org/jvnet/jaxb2_commons" name="jaxb2-basics" rev="${jaxb2-basics.version}" />
+		<publish org="org/jvnet/jaxb2_commons" name="jaxb2-basics-annotate" rev="${jaxb2-basics-annotate.version}" />
+		<publish org="org/jvnet/jaxb2_commons" name="jaxb2-basics-runtime" rev="${jaxb2-basics.version}" />
+		<publish org="org/jvnet/jaxb2_commons" name="jaxb2-basics-tools" rev="${jaxb2-basics.version}" />
+
+		<!-- org.jvnet.staxex -->
+		<publish org="org/jvnet/staxex" name="stax-ex" rev="${stax-ex.version}" />
+
+		<!-- org.objenesis -->
+		<publish org="org/objenesis" name="objenesis" rev="${org.objenesis.version}" />
+
+		<!-- org.osgi -->
+		<publish org="org/osgi" name="org.osgi.core" rev="${org.osgi.core.version}" />
+		<publish org="org/osgi" name="org.osgi.service.jdbc" rev="${org.osgi.service.jdbc.version}" />
+		<publish org="org/osgi" name="org.osgi.service.log" rev="${org.osgi.service.log.version}" />
+		<publish org="org/osgi" name="org.osgi.util.tracker" rev="${org.osgi.util.tracker.version}" />
+
+		<!-- org.ow2.asm -->
+		<publish org="org/ow2/asm" name="asm" rev="${asm.version}" />
+
+		<!-- org.postgresql -->
+		<publish org="org/postgresql" name="postgresql" rev="${postgresql.version}" />
+
+		<!-- org.springframework -->
+		<publish org="org/springframework" name="spring-aop" rev="${spring.version}" />
+		<publish org="org/springframework" name="spring-beans" rev="${spring.version}" />
+		<publish org="org/springframework" name="spring-context" rev="${spring.version}" />
+		<publish org="org/springframework" name="spring-core" rev="${spring.version}" />
+		<publish org="org/springframework" name="spring-expression" rev="${spring.version}" />
+		<publish org="org/springframework" name="spring-jdbc" rev="${spring.version}" />
+		<publish org="org/springframework" name="spring-test" rev="${spring.version}" />
+		<publish org="org/springframework" name="spring-tx" rev="${spring.version}" />
+
+		<!-- org.testng -->
+		<publish org="org/testng" name="testng" rev="${testng.version}" />
+		<!-- com.beust.jcommander -->
+		<publish org="com/beust" name="jcommander" rev="${jcommander.version}" />
+
+		<!-- org.codehaus.woodstox.stax2-api -->
+		<publish org="org/codehaus/woodstox" name="stax2-api" rev="${stax2-api.version}" />
+
+		<!-- org.w3c.css -->
+		<publish org="org/w3c/css" name="sac" rev="${sac.version}" />
+
+		<!-- org.xerial -->
+		<publish org="org/xerial" name="sqlite-jdbc" rev="${org.xerial.sqlite-jdbc.version}" />
+
+		<!-- tapestry -->
+		<publish org="tapestry" name="tapestry" rev="${tapestry.version}" />
+
+		<!-- uk.com.robust-it.cloning -->
+		<publish org="uk/com/robust-it" name="cloning" rev="${uk.com.robust-it.cloning.version}" />
+
+		<!-- xpp3 -->
+		<publish org="xpp3" name="xpp3" rev="${xpp3.version}">
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="XML Pull Parser" />
+				<attribute name="Bundle-SymbolicName" value="@{name}" />
+				<attribute name="Bundle-Version" value="1.1.4" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Export-Package" value="org.xmlpull.v1" />
+			</enrich>
+		</publish>
+
+		<!-- zxing -->
+		<publish org="com/google/zxing" name="zxing-core" rev="${zxing.version}">
+			<move file="${target.dir}/@{org}/core/@{rev}/core.jar" tofile="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+			<move file="${target.dir}/@{org}/core/@{rev}/core-sources.jar" tofile="${target.dir}/@{org}/@{name}/@{rev}/@{name}-sources.jar" />
+			<move file="${target.dir}/@{org}/core/@{rev}/core-javadoc.jar" tofile="${target.dir}/@{org}/@{name}/@{rev}/@{name}-javadoc.jar" />
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="Core ZXing barcode encoding/decoding library" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{org}/@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Export-Package" value="com.google.zxing,com.google.zxing.common,com.google.zxing.multi" />
+			</enrich>
+		</publish>
+		<publish org="com/google/zxing" name="zxing-javase" rev="${zxing.version}">
+			<move file="${target.dir}/@{org}/javase/@{rev}/javase.jar" tofile="${target.dir}/@{org}/@{name}/@{rev}/@{name}.jar" />
+			<move file="${target.dir}/@{org}/javase/@{rev}/javase-sources.jar" tofile="${target.dir}/@{org}/@{name}/@{rev}/@{name}-sources.jar" />
+			<move file="${target.dir}/@{org}/javase/@{rev}/javase-javadoc.jar" tofile="${target.dir}/@{org}/@{name}/@{rev}/@{name}-javadoc.jar" />
+			<enrich jar="@{org}/@{name}/@{rev}/@{name}.jar">
+				<attribute name="Bundle-Name" value="Java SE-specific extensions to core ZXing library" />
+				<attribute name="Bundle-Version" value="@{rev}" />
+				<attribute name="Bundle-SymbolicName" value="@{org}/@{name}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Import-Package" value="com.google.zxing" />
+				<attribute name="Export-Package" value="com.google.zxing.client.j2se" />
+			</enrich>
+		</publish>
+
+	</target>
+</project>

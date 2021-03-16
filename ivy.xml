@@ -1,0 +1,1330 @@
+<ivy-module version="2.0" xmlns:e="http://ant.apache.org/ivy/extra">
+	<info organisation="havis" module="3rdParty" default="true" />
+
+	<configurations>
+		<conf name="default" />
+	</configurations>
+
+	<dependencies>
+
+		<!-- aopalliance -->
+		<dependency org="aopalliance" name="aopalliance" rev="${aopalliance.version}" conf="default">
+			<artifact name="aopalliance" />
+			<artifact name="aopalliance" e:classifier="sources" />
+		</dependency>
+
+		<!-- bcel -->
+		<dependency org="org/apache/bcel" name="bcel" rev="${bcel.version}" conf="default">
+			<artifact name="bcel" />
+			<artifact name="bcel" e:classifier="javadoc" />
+			<artifact name="bcel" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- ch.qos.logback -->
+		<dependency org="ch/qos/logback" name="logback-core" rev="${logback.version}" conf="default">
+			<artifact name="logback-core" />
+			<artifact name="logback-core" e:classifier="javadoc" />
+			<artifact name="logback-core" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="ch/qos/logback" name="logback-classic" rev="${logback.version}" conf="default">
+			<artifact name="logback-classic" />
+			<artifact name="logback-classic" e:classifier="javadoc" />
+			<artifact name="logback-classic" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- colt -->
+		<dependency org="colt" name="colt" rev="${colt.version}" conf="default">
+			<artifact name="colt" />
+		</dependency>
+
+
+		<!-- com.fasterxml.jackson -->
+		<dependency org="com/fasterxml/jackson/core" name="jackson-annotations" rev="${jackson.version}" conf="default">
+			<artifact name="jackson-annotations" />
+			<artifact name="jackson-annotations" e:classifier="javadoc" />
+			<artifact name="jackson-annotations" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/fasterxml/jackson/core" name="jackson-core" rev="${jackson.version}" conf="default">
+			<artifact name="jackson-core" />
+			<artifact name="jackson-core" e:classifier="javadoc" />
+			<artifact name="jackson-core" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/fasterxml/jackson/core" name="jackson-databind" rev="${jackson.version}" conf="default">
+			<artifact name="jackson-databind" />
+			<artifact name="jackson-databind" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/fasterxml/jackson/dataformat" name="jackson-dataformat-xml" rev="${jackson.version}" conf="default">
+			<artifact name="jackson-dataformat-xml" />
+			<artifact name="jackson-dataformat-xml" e:classifier="javadoc" />
+			<artifact name="jackson-dataformat-xml" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/fasterxml/jackson/jaxrs" name="jackson-jaxrs-base" rev="${jackson.version}" conf="default">
+			<artifact name="jackson-jaxrs-base" />
+			<artifact name="jackson-jaxrs-base" e:classifier="javadoc" />
+			<artifact name="jackson-jaxrs-base" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/fasterxml/jackson/jaxrs" name="jackson-jaxrs-json-provider" rev="${jackson.version}" conf="default">
+			<artifact name="jackson-jaxrs-json-provider" />
+			<artifact name="jackson-jaxrs-json-provider" e:classifier="javadoc" />
+			<artifact name="jackson-jaxrs-json-provider" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/fasterxml/jackson/module" name="jackson-module-jaxb-annotations" rev="${jackson.version}" conf="default">
+			<artifact name="jackson-module-jaxb-annotations" />
+			<artifact name="jackson-module-jaxb-annotations" e:classifier="javadoc" />
+			<artifact name="jackson-module-jaxb-annotations" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- com.github.gwtd3 -->
+		<dependency org="com/github/gwtd3" name="gwt-d3-api" rev="${gwt-d3-api.version}" conf="default">
+			<artifact name="gwt-d3-api" />
+			<artifact name="gwt-d3-api" e:classifier="javadoc" />
+			<artifact name="gwt-d3-api" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/github/gwtd3" name="gwt-d3-js" rev="${gwt-d3-js.version}" conf="default">
+			<artifact name="gwt-d3-js" />
+			<artifact name="gwt-d3-js" e:classifier="javadoc" />
+			<artifact name="gwt-d3-js" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- com.github.nmorel.gwtjackson -->
+		<dependency org="com/github/nmorel/gwtjackson" name="gwt-jackson" rev="${gwt-jackson.version}" conf="default">
+			<artifact name="gwt-jackson" />
+			<artifact name="gwt-jackson" e:classifier="javadoc" />
+			<artifact name="gwt-jackson" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- com.google.code -->
+		<dependency org="com/google/code/gson" name="gson" rev="${gson.version}" conf="default">
+			<artifact name="gson" />
+			<artifact name="gson" e:classifier="javadoc" />
+			<artifact name="gson" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/google/code/javaparser" name="javaparser" rev="${javaparser.version}" conf="default">
+			<artifact name="javaparser" />
+			<artifact name="javaparser" e:classifier="javadoc" />
+			<artifact name="javaparser" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- com.google.gwt -->
+		<dependency org="com/google/gwt" name="gwt-dev" rev="${gwt.version}" conf="default">
+			<artifact name="gwt-dev" />
+			<artifact name="gwt-dev" e:classifier="javadoc" />
+			<artifact name="gwt-dev" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/google/gwt" name="gwt-elemental" rev="${gwt.version}" conf="default">
+			<artifact name="gwt-elemental" />
+			<artifact name="gwt-elemental" e:classifier="javadoc" />
+			<artifact name="gwt-elemental" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/google/gwt" name="gwt-servlet" rev="${gwt.version}" conf="default">
+			<artifact name="gwt-servlet" />
+			<artifact name="gwt-servlet" e:classifier="javadoc" />
+			<artifact name="gwt-servlet" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/google/gwt" name="gwt-user" rev="${gwt.version}" conf="default">
+			<artifact name="gwt-user" />
+			<artifact name="gwt-user" e:classifier="javadoc" />
+			<artifact name="gwt-user" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/google/gwt/inject" name="gin" rev="${com.google.gin.version}" conf="default">
+			<artifact name="gin" />
+			<artifact name="gin" e:classifier="javadoc" />
+			<artifact name="gin" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/google/guava" name="guava" rev="${com.google.guava.version}" conf="default">
+			<artifact name="guava" />
+			<artifact name="guava" e:classifier="javadoc" />
+			<artifact name="guava" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/google/inject/extensions" name="guice-assistedinject" rev="${com.google.guice.version}" conf="default">
+			<artifact name="guice-assistedinject" />
+			<artifact name="guice-assistedinject" e:classifier="javadoc" />
+			<artifact name="guice-assistedinject" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/google/inject" name="guice" rev="${com.google.guice.version}" conf="default">
+			<artifact name="guice" />
+			<artifact name="guice" e:classifier="javadoc" />
+			<artifact name="guice" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/google/jsinterop" name="jsinterop-annotations" rev="${jsinterop.version}" conf="default">
+			<artifact name="jsinterop-annotations" />
+			<artifact name="jsinterop-annotations" e:classifier="javadoc" />
+			<artifact name="jsinterop-annotations" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- com.h2database -->
+		<dependency org="com/h2database" name="h2" rev="${h2.version}" conf="default">
+			<artifact name="h2" />
+			<artifact name="h2" e:classifier="javadoc" />
+			<artifact name="h2" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- jSerialComm -->
+		<dependency org="com/fazecast" name="jSerialComm" rev="${jserial.version}" conf="default">
+			<artifact name="jSerialComm" />
+			<artifact name="jSerialComm" e:classifier="javadoc" />
+			<artifact name="jSerialComm" e:classifier="sources" />
+		</dependency>
+
+		<!-- com/microsoft/azure/sdk/iot -->
+		<dependency org="com/microsoft/azure/sdk/iot" name="iot-deps" rev="${iot-deps.version}" conf="default">
+			<artifact name="iot-deps" />
+			<artifact name="iot-deps" e:classifier="javadoc" />
+			<artifact name="iot-deps" e:classifier="sources" />
+		</dependency>
+
+		<!-- com/microsoft/azure/sdk/iot -->
+		<dependency org="com/microsoft/azure/sdk/iot" name="iot-device-client" rev="${iot-device-client.version}" conf="default">
+			<artifact name="iot-device-client" />
+			<artifact name="iot-device-client" e:classifier="javadoc" />
+			<artifact name="iot-device-client" e:classifier="sources" />
+		</dependency>
+
+		<!-- com.microsoft.sqlserver.jdbc -->
+		<dependency org="com/microsoft/sqlserver/jdbc" name="sqljdbc" rev="${sqljdbc.version}" conf="default">
+			<artifact name="sqljdbc" />
+		</dependency>
+
+		<!-- com.nordicid -->
+		<dependency org="com/nordicid" name="firmware" rev="${com.nordicid.firmware.version}" conf="default">
+			<artifact name="NUR-L2-application" type="bin" />
+			<artifact name="NUR-05WL2-loader" type="bin" />
+		</dependency>
+
+		<dependency org="com/nordicid" name="nurapi" rev="${nordicid.version}" conf="default">
+			<artifact name="NurApi" />
+			<artifact name="NurApi" e:classifier="javadoc" />
+		</dependency>
+
+
+		<!-- com.sun.xml -->
+		<dependency org="com/sun/xml/bind" name="jaxb-core" rev="${jaxb.version}" conf="default">
+			<artifact name="jaxb-core" />
+			<artifact name="jaxb-core" e:classifier="javadoc" />
+			<artifact name="jaxb-core" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/sun/xml/bind" name="jaxb-impl" rev="${jaxb.version}" conf="default">
+			<artifact name="jaxb-impl" />
+			<artifact name="jaxb-impl" e:classifier="javadoc" />
+			<artifact name="jaxb-impl" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/sun/xml/bind" name="jaxb-xjc" rev="${jaxb.version}" conf="default">
+			<artifact name="jaxb-xjc" />
+			<artifact name="jaxb-xjc" e:classifier="javadoc" />
+			<artifact name="jaxb-xjc" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/sun/xml/stream/buffer" name="streambuffer" rev="${streambuffer.version}" conf="default">
+			<artifact name="streambuffer" />
+			<artifact name="streambuffer" e:classifier="javadoc" />
+			<artifact name="streambuffer" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/sun/xml/ws" name="jaxws-rt" rev="${jaxws.version}" conf="default">
+			<artifact name="jaxws-rt" />
+			<artifact name="jaxws-rt" e:classifier="javadoc" />
+			<artifact name="jaxws-rt" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/sun/xml/ws" name="jaxws-tools" rev="${jaxws.version}" conf="default">
+			<artifact name="jaxws-tools" />
+			<artifact name="jaxws-tools" e:classifier="javadoc" />
+			<artifact name="jaxws-tools" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/sun/xml/ws" name="policy" rev="${policy.version}" conf="default">
+			<artifact name="policy" />
+			<artifact name="policy" e:classifier="javadoc" />
+			<artifact name="policy" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- qdox -->
+		<dependency org="com/thoughtworks/qdox" name="qdox" rev="${qdox.version}" conf="default">
+			<artifact name="qdox" />
+			<artifact name="qdox" e:classifier="javadoc" />
+			<artifact name="qdox" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- commons -->
+		<dependency org="commons-cli" name="commons-cli" rev="${commons-cli.version}" conf="default">
+			<artifact name="commons-cli" />
+			<artifact name="commons-cli" e:classifier="javadoc" />
+			<artifact name="commons-cli" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="commons-codec" name="commons-codec" rev="${commons-codec.version}" conf="default">
+			<artifact name="commons-codec" />
+			<artifact name="commons-codec" e:classifier="javadoc" />
+			<artifact name="commons-codec" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="commons-io" name="commons-io" rev="${commons-io.version}" conf="default">
+			<artifact name="commons-io" />
+			<artifact name="commons-io" e:classifier="javadoc" />
+			<artifact name="commons-io" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="commons-logging" name="commons-logging" rev="${commons-logging.version}" conf="default">
+			<artifact name="commons-logging" />
+			<artifact name="commons-logging" e:classifier="javadoc" />
+			<artifact name="commons-logging" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- hexdump -->
+		<dependency org="cx/ath/matthew/utils" name="hexdump" rev="${hexdump.version}" conf="default">
+			<artifact name="hexdump" />
+			<artifact name="hexdump" e:classifier="javadoc" />
+			<artifact name="hexdump" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- de.feig.obid -->
+		<dependency org="de/feig" name="obid" rev="${de.feig.obid.version}" conf="default">
+			<artifact name="OBIDISC4J" />
+			<artifact name="OBIDISC4J" e:classifier="javadoc" />
+			<artifact name="OBIDISC4J_API" />
+			<artifact name="OBIDISC4J_API" e:classifier="javadoc" />
+		</dependency>
+
+		<dependency org="de/feig" name="obid-linux-amd64" rev="${de.feig.obid.version}" conf="default">
+			<artifact name="libfecom" ext="so.3.4.0" conf="default" />
+			<artifact name="libFedmIscCore" ext="so.5.5.2" conf="default" />
+			<artifact name="libFedmIscService" ext="so.8.6.1" conf="default" />
+			<artifact name="libfefu" ext="so.2.2.0" conf="default" />
+			<artifact name="libfeisc" ext="so.7.8.0" conf="default" />
+			<artifact name="libfetcl" ext="so.2.4.0" conf="default" />
+			<artifact name="libfetcp" ext="so.3.1.0" conf="default" />
+			<artifact name="libfeusb" ext="so.6.0.2" conf="default" />
+			<artifact name="libobidisc4j" ext="so.5.5.2" conf="default" />
+		</dependency>
+
+		<dependency org="de/feig" name="obid-linux-arm" rev="${de.feig.obid.version}" conf="default">
+			<artifact name="libfecom" ext="so.3.4.0" conf="default" />
+			<artifact name="libFedmIscCore" ext="so.5.5.2" conf="default" />
+			<artifact name="libFedmIscService" ext="so.8.6.1" conf="default" />
+			<artifact name="libfefu" ext="so.2.2.0" conf="default" />
+			<artifact name="libfeisc" ext="so.7.8.0" conf="default" />
+			<artifact name="libfetcl" ext="so.2.4.0" conf="default" />
+			<artifact name="libfetcp" ext="so.3.1.0" conf="default" />
+			<artifact name="libfeusb" ext="so.6.0.2" conf="default" />
+			<artifact name="libobidisc4j" ext="so.5.5.2" conf="default" />
+		</dependency>
+
+
+		<!-- io.netty -->
+		<dependency org="io/netty" name="netty" rev="${netty.camel-netty.version}" conf="default">
+			<artifact name="netty" />
+			<artifact name="netty" e:classifier="javadoc" />
+			<artifact name="netty" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="io/netty" name="netty-buffer" rev="${netty.version}" conf="default">
+			<artifact name="netty-buffer" />
+			<artifact name="netty-buffer" e:classifier="javadoc" />
+			<artifact name="netty-buffer" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="io/netty" name="netty-codec" rev="${netty.version}" conf="default">
+			<artifact name="netty-codec" />
+			<artifact name="netty-codec" e:classifier="javadoc" />
+			<artifact name="netty-codec" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="io/netty" name="netty-codec-http" rev="${netty.version}" conf="default">
+			<artifact name="netty-codec-http" />
+			<artifact name="netty-codec-http" e:classifier="javadoc" />
+			<artifact name="netty-codec-http" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="io/netty" name="netty-common" rev="${netty.version}" conf="default">
+			<artifact name="netty-common" />
+			<artifact name="netty-common" e:classifier="javadoc" />
+			<artifact name="netty-common" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="io/netty" name="netty-handler" rev="${netty.version}" conf="default">
+			<artifact name="netty-handler" />
+			<artifact name="netty-handler" e:classifier="javadoc" />
+			<artifact name="netty-handler" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="io/netty" name="netty-resolver" rev="${netty.version}" conf="default">
+			<artifact name="netty-resolver" />
+			<artifact name="netty-resolver" e:classifier="javadoc" />
+			<artifact name="netty-resolver" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="io/netty" name="netty-transport" rev="${netty.version}" conf="default">
+			<artifact name="netty-transport" />
+			<artifact name="netty-transport" e:classifier="javadoc" />
+			<artifact name="netty-transport" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- javax -->
+		<dependency org="javax/annotation" name="javax.annotation-api" rev="${javax.annotation-api.version}" conf="default">
+			<artifact name="javax.annotation-api" />
+			<artifact name="javax.annotation-api" e:classifier="javadoc" />
+			<artifact name="javax.annotation-api" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="javax/inject" name="javax.inject" rev="${javax.inject.version}" conf="default">
+			<artifact name="javax.inject" />
+			<artifact name="javax.inject" e:classifier="javadoc" />
+			<artifact name="javax.inject" e:classifier="sources" />
+		</dependency>
+
+
+		<dependency org="javax/validation" name="validation-api" rev="${validation-api.version}" conf="default">
+			<artifact name="validation-api" />
+			<artifact name="validation-api" e:classifier="javadoc" />
+			<artifact name="validation-api" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="javax/ws/rs" name="javax.ws.rs-api" rev="${javax.ws.rs-api.version}" conf="default">
+			<artifact name="javax.ws.rs-api" />
+			<artifact name="javax.ws.rs-api" e:classifier="javadoc" />
+			<artifact name="javax.ws.rs-api" e:classifier="sources" />
+		</dependency>
+
+
+		<dependency org="javax/xml/bind" name="jaxb-api" rev="${jaxb.version}" conf="default">
+			<artifact name="jaxb-api" />
+			<artifact name="jaxb-api" e:classifier="javadoc" />
+			<artifact name="jaxb-api" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="javax/xml/ws" name="jaxws-api" rev="${jaxws-api.version}" conf="default">
+			<artifact name="jaxws-api" />
+			<artifact name="jaxws-api" e:classifier="javadoc" />
+			<artifact name="jaxws-api" e:classifier="sources" />
+		</dependency>
+
+		<!-- jcifs -->
+		<dependency org="jcifs" name="jcifs" rev="${jcifs.version}" conf="default">
+			<artifact name="jcifs" />
+			<artifact name="jcifs" e:classifier="javadoc" />
+			<artifact name="jcifs" e:classifier="sources" />
+		</dependency>
+
+		<!-- joda-time -->
+		<dependency org="joda-time" name="joda-time" rev="${joda-time.version}" conf="default">
+			<artifact name="joda-time" />
+			<artifact name="joda-time" e:classifier="javadoc" />
+			<artifact name="joda-time" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- junit -->
+		<dependency org="junit" name="junit" rev="${junit.version}" conf="default">
+			<artifact name="junit" />
+			<artifact name="junit" e:classifier="javadoc" />
+			<artifact name="junit" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- log4j -->
+		<dependency org="log4j" name="log4j" rev="${log4j.version}" conf="default">
+			<artifact name="log4j" />
+			<artifact name="log4j" e:classifier="javadoc" />
+			<artifact name="log4j" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- mysql -->
+		<dependency org="mysql" name="mysql-connector-java" rev="${mysql.version}" conf="default">
+			<artifact name="mysql-connector-java" />
+			<artifact name="mysql-connector-java" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- saxon -->
+		<dependency org="net/sf/saxon" name="Saxon-HE" rev="${saxon.version}" conf="default">
+			<artifact name="Saxon-HE" />
+			<artifact name="Saxon-HE" e:classifier="javadoc" />
+			<artifact name="Saxon-HE" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- supercsv -->
+		<dependency org="net/sf/supercsv" name="super-csv" rev="${supercsv.version}" conf="default">
+			<artifact name="super-csv" />
+			<artifact name="super-csv" e:classifier="javadoc" />
+			<artifact name="super-csv" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.apache.ant -->
+		<dependency org="org/apache/ant" name="ant" rev="${org.apache.ant.version}" conf="default">
+			<artifact name="ant" />
+			<artifact name="ant" e:classifier="javadoc" />
+			<artifact name="ant" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- stringtemplate -->
+		<dependency org="org/antlr" name="ST4" rev="${stringtemplate.version}" conf="default">
+			<artifact name="ST4" />
+			<artifact name="ST4" e:classifier="javadoc" />
+			<artifact name="ST4" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- antlr4-runtime -->
+		<dependency org="org/antlr" name="antlr-runtime" rev="${antlr-runtime.version}" conf="default">
+			<artifact name="antlr-runtime" />
+			<artifact name="antlr-runtime" e:classifier="javadoc" />
+			<artifact name="antlr-runtime" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.apache.commons -->
+
+		<dependency org="org/apache/commons" name="commons-lang3" rev="${commons-lang3.version}" conf="default">
+			<artifact name="commons-lang3" />
+			<artifact name="commons-lang3" e:classifier="javadoc" />
+			<artifact name="commons-lang3" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/commons" name="commons-math3" rev="${commons-math3.version}" conf="default">
+			<artifact name="commons-math3" />
+			<artifact name="commons-math3" e:classifier="javadoc" />
+			<artifact name="commons-math3" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.apache.edgent -->
+		<dependency org="org/apache/edgent" name="edgent-analytics-math3" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-analytics-math3" />
+			<artifact name="edgent-analytics-math3" e:classifier="javadoc" />
+			<artifact name="edgent-analytics-math3" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-analytics-sensors" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-analytics-sensors" />
+			<artifact name="edgent-analytics-sensors" e:classifier="javadoc" />
+			<artifact name="edgent-analytics-sensors" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-api-execution" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-api-execution" />
+			<artifact name="edgent-api-execution" e:classifier="javadoc" />
+			<artifact name="edgent-api-execution" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-api-function" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-api-function" />
+			<artifact name="edgent-api-function" e:classifier="javadoc" />
+			<artifact name="edgent-api-function" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-api-graph" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-api-graph" />
+			<artifact name="edgent-api-graph" e:classifier="javadoc" />
+			<artifact name="edgent-api-graph" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-api-oplet" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-api-oplet" />
+			<artifact name="edgent-api-oplet" e:classifier="javadoc" />
+			<artifact name="edgent-api-oplet" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-api-topology" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-api-topology" />
+			<artifact name="edgent-api-topology" e:classifier="javadoc" />
+			<artifact name="edgent-api-topology" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-api-window" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-api-window" />
+			<artifact name="edgent-api-window" e:classifier="javadoc" />
+			<artifact name="edgent-api-window" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-connectors-common" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-connectors-common" />
+			<artifact name="edgent-connectors-common" e:classifier="javadoc" />
+			<artifact name="edgent-connectors-common" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-connectors-iot" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-connectors-iot" />
+			<artifact name="edgent-connectors-iot" e:classifier="javadoc" />
+			<artifact name="edgent-connectors-iot" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-connectors-mqtt" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-connectors-mqtt" />
+			<artifact name="edgent-connectors-mqtt" e:classifier="javadoc" />
+			<artifact name="edgent-connectors-mqtt" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-providers-direct" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-providers-direct" />
+			<artifact name="edgent-providers-direct" e:classifier="javadoc" />
+			<artifact name="edgent-providers-direct" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-runtime-etiao" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-runtime-etiao" />
+			<artifact name="edgent-runtime-etiao" e:classifier="javadoc" />
+			<artifact name="edgent-runtime-etiao" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-runtime-jsoncontrol" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-runtime-jsoncontrol" />
+			<artifact name="edgent-runtime-jsoncontrol" e:classifier="javadoc" />
+			<artifact name="edgent-runtime-jsoncontrol" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-spi-graph" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-spi-graph" />
+			<artifact name="edgent-spi-graph" e:classifier="javadoc" />
+			<artifact name="edgent-spi-graph" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/edgent" name="edgent-spi-topology" rev="${edgent.version}" conf="default">
+			<artifact name="edgent-spi-topology" />
+			<artifact name="edgent-spi-topology" e:classifier="javadoc" />
+			<artifact name="edgent-spi-topology" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.apache.felix -->
+		<dependency org="org/apache/felix" name="org.apache.felix.main" rev="${org.apache.felix.version}" conf="default">
+			<artifact name="org.apache.felix.main" />
+			<artifact name="org.apache.felix.main" e:classifier="javadoc" />
+			<artifact name="org.apache.felix.main" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/felix" name="org.apache.felix.framework" rev="${org.apache.felix.version}" conf="default">
+			<artifact name="org.apache.felix.framework" />
+			<artifact name="org.apache.felix.framework" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/apache/felix" name="org.apache.felix.resolver" rev="${org.apache.felix.resolver.version}" conf="default">
+			<artifact name="org.apache.felix.resolver" />
+			<artifact name="org.apache.felix.resolver" e:classifier="sources" />
+		</dependency>
+
+		<!-- org.apache.felix.bundlerepository -->
+		<dependency org="org/apache/felix" name="org.apache.felix.bundlerepository" rev="${org.apache.felix.bundlerepository.version}" conf="default">
+			<artifact name="org.apache.felix.bundlerepository" />
+			<artifact name="org.apache.felix.bundlerepository" e:classifier="javadoc" />
+			<artifact name="org.apache.felix.bundlerepository" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.apache.felix.configadmin -->
+		<dependency org="org/apache/felix" name="org.apache.felix.configadmin" rev="${org.apache.felix.configadmin.version}" conf="default">
+			<artifact name="org.apache.felix.configadmin" />
+			<artifact name="org.apache.felix.configadmin" e:classifier="javadoc" />
+			<artifact name="org.apache.felix.configadmin" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.apache.felix.eventadmin -->
+		<dependency org="org/apache/felix" name="org.apache.felix.eventadmin" rev="${org.apache.felix.eventadmin.version}" conf="default">
+			<artifact name="org.apache.felix.eventadmin" />
+			<artifact name="org.apache.felix.eventadmin" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.apache.felix.gogo.command -->
+		<dependency org="org/apache/felix" name="org.apache.felix.gogo.command" rev="${org.apache.felix.gogo.command.version}" conf="default">
+			<artifact name="org.apache.felix.gogo.command" />
+		</dependency>
+
+
+		<!-- org.apache.felix.gogo.runtime -->
+		<dependency org="org/apache/felix" name="org.apache.felix.gogo.runtime" rev="${org.apache.felix.gogo.runtime.version}" conf="default">
+			<artifact name="org.apache.felix.gogo.runtime" />
+		</dependency>
+
+
+		<!-- org.apache.felix.gogo.shell -->
+		<dependency org="org/apache/felix" name="org.apache.felix.gogo.shell" rev="${org.apache.felix.gogo.shell.version}" conf="default">
+			<artifact name="org.apache.felix.gogo.shell" />
+		</dependency>
+
+
+		<!-- org.apache.httpcomponents -->
+		<dependency org="org/apache/httpcomponents" name="httpclient" rev="${httpclient.version}" conf="default">
+			<artifact name="httpclient" />
+			<artifact name="httpclient" e:classifier="sources" />
+			<artifact name="httpclient" e:classifier="javadoc" />
+		</dependency>
+
+		<dependency org="org/apache/httpcomponents" name="httpcore" rev="${httpcore.version}" conf="default">
+			<artifact name="httpcore" />
+			<artifact name="httpcore" e:classifier="sources" />
+			<artifact name="httpcore" e:classifier="javadoc" />
+		</dependency>
+
+
+		<!-- org.apache.james.mime4j -->
+		<dependency org="org/apache/james" name="apache-mime4j" rev="${mime4j.version}" conf="default">
+			<artifact name="apache-mime4j" />
+			<artifact name="apache-mime4j" e:classifier="sources" />
+			<artifact name="apache-mime4j" e:classifier="javadoc" />
+		</dependency>
+
+
+		<!-- org.eclipse.paho -->
+		<dependency org="org/eclipse/paho" name="org.eclipse.paho.client.mqttv3" rev="${paho.version}">
+			<artifact name="org.eclipse.paho.client.mqttv3" />
+			<artifact name="org.eclipse.paho.client.mqttv3" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.fusesource.restygwt -->
+		<dependency org="org/fusesource/restygwt" name="restygwt" rev="${restygwt.version}" conf="default">
+			<artifact name="restygwt" />
+			<artifact name="restygwt" e:classifier="javadoc" />
+			<artifact name="restygwt" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- dbus -->
+		<dependency org="org/freedesktop" name="dbus" rev="${dbus.version}" conf="default">
+			<artifact name="dbus" />
+			<artifact name="dbus" e:classifier="javadoc" />
+			<artifact name="dbus" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.glassfish.gmbal -->
+		<dependency org="org/glassfish/gmbal" name="gmbal-api-only" rev="${gmbal.version}" conf="default">
+			<artifact name="gmbal-api-only" />
+		</dependency>
+
+
+		<!-- org.glassfish.tyrus -->
+		<dependency org="org/glassfish/tyrus/bundles" name="tyrus-standalone-client" rev="${tyrus.version}" conf="default">
+			<artifact name="tyrus-standalone-client" />
+			<artifact name="tyrus-standalone-client" e:classifier="javadoc" />
+			<artifact name="tyrus-standalone-client" e:classifier="sources" />
+		</dependency>
+
+		<!-- org.hamcrest.hamcrest-core -->
+		<dependency org="org/hamcrest" name="hamcrest-core" rev="${hamcrest-core.version}" conf="default">
+			<artifact name="hamcrest-core" />
+			<artifact name="hamcrest-core" e:classifier="javadoc" />
+			<artifact name="hamcrest-core" e:classifier="sources" />
+		</dependency>
+
+		<!-- org.jboss.logging -->
+		<dependency org="org/jboss/logging" name="jboss-logging" rev="${jboss-logging.version}" conf="default">
+			<artifact name="jboss-logging" />
+			<artifact name="jboss-logging" e:classifier="sources" />
+		</dependency>
+
+		<!-- org.jboss.resteasy -->
+		<dependency org="org/jboss/resteasy" name="resteasy-jackson2-provider" rev="${resteasy.version}" conf="default">
+			<artifact name="resteasy-jackson2-provider" />
+			<artifact name="resteasy-jackson2-provider" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jboss/resteasy" name="resteasy-jaxb-provider" rev="${resteasy.version}" conf="default">
+			<artifact name="resteasy-jaxb-provider" />
+			<artifact name="resteasy-jaxb-provider" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jboss/resteasy" name="resteasy-jaxrs" rev="${resteasy.version}" conf="default">
+			<artifact name="resteasy-jaxrs" />
+			<artifact name="resteasy-jaxrs" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jboss/resteasy" name="resteasy-multipart-provider" rev="${resteasy.version}" conf="default">
+			<artifact name="resteasy-multipart-provider" />
+			<artifact name="resteasy-multipart-provider" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jboss/resteasy" name="resteasy-client" rev="${resteasy.version}" conf="default">
+			<artifact name="resteasy-client" />
+			<artifact name="resteasy-client" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jboss/resteasy" name="resteasy-jdk-http" rev="${resteasy.version}" conf="default">
+			<artifact name="resteasy-jdk-http" />
+			<artifact name="resteasy-jdk-http" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jboss/resteasy" name="resteasy-netty4" rev="${resteasy.version}" conf="default">
+			<artifact name="resteasy-netty4" />
+			<artifact name="resteasy-netty4" e:classifier="sources" />
+		</dependency>
+
+		<!-- org.jboss.resteasy -->
+		<dependency org="org/jboss/resteasy" name="resteasy-jackson2-provider" rev="${resteasy-legacy.version}" conf="default">
+			<artifact name="resteasy-jackson2-provider" />
+			<artifact name="resteasy-jackson2-provider" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jboss/resteasy" name="resteasy-jaxb-provider" rev="${resteasy-legacy.version}" conf="default">
+			<artifact name="resteasy-jaxb-provider" />
+			<artifact name="resteasy-jaxb-provider" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jboss/resteasy" name="resteasy-jaxrs" rev="${resteasy-legacy.version}" conf="default">
+			<artifact name="resteasy-jaxrs" />
+			<artifact name="resteasy-jaxrs" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jboss/resteasy" name="resteasy-multipart-provider" rev="${resteasy-legacy.version}" conf="default">
+			<artifact name="resteasy-multipart-provider" />
+			<artifact name="resteasy-multipart-provider" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jboss/resteasy" name="resteasy-client" rev="${resteasy-legacy.version}" conf="default">
+			<artifact name="resteasy-client" />
+			<artifact name="resteasy-client" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jboss/resteasy" name="resteasy-jdk-http" rev="${resteasy-legacy.version}" conf="default">
+			<artifact name="resteasy-jdk-http" />
+			<artifact name="resteasy-jdk-http" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jboss/resteasy" name="resteasy-netty4" rev="${resteasy-legacy.version}" conf="default">
+			<artifact name="resteasy-netty4" />
+			<artifact name="resteasy-netty4" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/java-websocket" name="Java-WebSocket" rev="${java-websocket.version}" conf="default">
+			<artifact name="Java-WebSocket" />
+			<artifact name="Java-WebSocket" e:classifier="javadoc" />
+			<artifact name="Java-WebSocket" e:classifier="sources" />
+		</dependency>
+
+		<!-- org.jibx -->
+		<dependency org="org/jibx" name="jibx-bind" rev="${jibx.version}" conf="default">
+			<artifact name="jibx-bind" />
+			<artifact name="jibx-bind" e:classifier="javadoc" />
+			<artifact name="jibx-bind" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jibx" name="jibx-extras" rev="${jibx.version}" conf="default">
+			<artifact name="jibx-extras" />
+			<artifact name="jibx-extras" e:classifier="javadoc" />
+			<artifact name="jibx-extras" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jibx" name="jibx-run" rev="${jibx.version}" conf="default">
+			<artifact name="jibx-run" />
+			<artifact name="jibx-run" e:classifier="javadoc" />
+			<artifact name="jibx-run" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jibx" name="jibx-schema" rev="${jibx.version}" conf="default">
+			<artifact name="jibx-schema" />
+			<artifact name="jibx-schema" e:classifier="javadoc" />
+			<artifact name="jibx-schema" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jibx" name="jibx-tools" rev="${jibx.version}" conf="default">
+			<artifact name="jibx-tools" />
+			<artifact name="jibx-tools" e:classifier="javadoc" />
+			<artifact name="jibx-tools" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.core.contenttype" rev="${org.eclipse.core.contenttype.version}"
+			conf="default">
+			<artifact name="org.eclipse.core.contenttype" />
+			<artifact name="org.eclipse.core.contenttype" e:classifier="javadoc" />
+			<artifact name="org.eclipse.core.contenttype" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.core.jobs" rev="${org.eclipse.core.jobs.version}" conf="default">
+			<artifact name="org.eclipse.core.jobs" />
+			<artifact name="org.eclipse.core.jobs" e:classifier="javadoc" />
+			<artifact name="org.eclipse.core.jobs" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.core.resources" rev="${org.eclipse.core.resources.version}" conf="default">
+			<artifact name="org.eclipse.core.resources" />
+			<artifact name="org.eclipse.core.resources" e:classifier="javadoc" />
+			<artifact name="org.eclipse.core.resources" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.core.runtime" rev="${org.eclipse.core.runtime.version}" conf="default">
+			<artifact name="org.eclipse.core.runtime" />
+			<artifact name="org.eclipse.core.runtime" e:classifier="javadoc" />
+			<artifact name="org.eclipse.core.runtime" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.equinox.common" rev="${org.eclipse.equinox.common.version}" conf="default">
+			<artifact name="org.eclipse.equinox.common" />
+			<artifact name="org.eclipse.equinox.common" e:classifier="javadoc" />
+			<artifact name="org.eclipse.equinox.common" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.equinox.preferences" rev="${org.eclipse.equinox.preferences.version}"
+			conf="default">
+			<artifact name="org.eclipse.equinox.preferences" />
+			<artifact name="org.eclipse.equinox.preferences" e:classifier="javadoc" />
+			<artifact name="org.eclipse.equinox.preferences" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.jdt.core" rev="${org.eclipse.jdt.core.version}" conf="default">
+			<artifact name="org.eclipse.jdt.core" />
+			<artifact name="org.eclipse.jdt.core" e:classifier="javadoc" />
+			<artifact name="org.eclipse.jdt.core" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.osgi" rev="${org.eclipse.osgi.version}" conf="default">
+			<artifact name="org.eclipse.osgi" />
+			<artifact name="org.eclipse.osgi" e:classifier="javadoc" />
+			<artifact name="org.eclipse.osgi" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jibx/config/3rdparty/org/eclipse" name="org.eclipse.text" rev="${org.eclipse.text.version}" conf="default">
+			<artifact name="org.eclipse.text" />
+			<artifact name="org.eclipse.text" e:classifier="javadoc" />
+			<artifact name="org.eclipse.text" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.jmockit -->
+		<dependency org="org/jmockit" name="jmockit" rev="${jmockit.version}" conf="default">
+			<artifact name="jmockit" />
+			<artifact name="jmockit" e:classifier="javadoc" />
+			<artifact name="jmockit" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jmockit" name="jmockit-coverage" rev="${jmockit.version}" conf="default">
+			<artifact name="jmockit-coverage" />
+			<artifact name="jmockit-coverage" e:classifier="javadoc" />
+			<artifact name="jmockit-coverage" e:classifier="sources" />
+		</dependency>
+
+		<!-- org.jvnet.annox -->
+		<dependency org="org/jvnet/annox" name="annox" rev="${annox.version}" conf="default">
+			<artifact name="annox" />
+			<artifact name="annox" e:classifier="javadoc" />
+			<artifact name="annox" e:classifier="sources" />
+		</dependency>
+
+		<!-- org.jvnet.jaxb2_commons -->
+		<dependency org="org/jvnet/jaxb2_commons" name="jaxb2-basics" rev="${jaxb2-basics.version}" conf="default">
+			<artifact name="jaxb2-basics" />
+			<artifact name="jaxb2-basics" e:classifier="javadoc" />
+			<artifact name="jaxb2-basics" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jvnet/jaxb2_commons" name="jaxb2-basics-annotate" rev="${jaxb2-basics-annotate.version}" conf="default">
+			<artifact name="jaxb2-basics-annotate" />
+			<artifact name="jaxb2-basics-annotate" e:classifier="javadoc" />
+			<artifact name="jaxb2-basics-annotate" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jvnet/jaxb2_commons" name="jaxb2-basics-runtime" rev="${jaxb2-basics.version}" conf="default">
+			<artifact name="jaxb2-basics-runtime" />
+			<artifact name="jaxb2-basics-runtime" e:classifier="javadoc" />
+			<artifact name="jaxb2-basics-runtime" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/jvnet/jaxb2_commons" name="jaxb2-basics-tools" rev="${jaxb2-basics.version}" conf="default">
+			<artifact name="jaxb2-basics-tools" />
+			<artifact name="jaxb2-basics-tools" e:classifier="javadoc" />
+			<artifact name="jaxb2-basics-tools" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.jvnet.staxex -->
+		<dependency org="org/jvnet/staxex" name="stax-ex" rev="${stax-ex.version}" conf="default">
+			<artifact name="stax-ex" />
+			<artifact name="stax-ex" e:classifier="javadoc" />
+			<artifact name="stax-ex" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.objenesis -->
+		<dependency org="org/objenesis" name="objenesis" rev="${org.objenesis.version}" conf="default">
+			<artifact name="objenesis" />
+			<artifact name="objenesis" e:classifier="javadoc" />
+			<artifact name="objenesis" e:classifier="sources" />
+		</dependency>
+
+		<!-- org.osgi -->
+		<dependency org="org/osgi" name="org.osgi.core" rev="${org.osgi.core.version}" conf="default">
+			<artifact name="org.osgi.core" />
+			<artifact name="org.osgi.core" e:classifier="javadoc" />
+			<artifact name="org.osgi.core" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/osgi" name="org.osgi.service.jdbc" rev="${org.osgi.service.jdbc.version}" conf="default">
+			<artifact name="org.osgi.service.jdbc" />
+			<artifact name="org.osgi.service.jdbc" e:classifier="javadoc" />
+			<artifact name="org.osgi.service.jdbc" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/osgi" name="org.osgi.service.log" rev="${org.osgi.service.log.version}" conf="default">
+			<artifact name="org.osgi.service.log" />
+			<artifact name="org.osgi.service.log" e:classifier="javadoc" />
+			<artifact name="org.osgi.service.log" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/osgi" name="org.osgi.util.tracker" rev="${org.osgi.util.tracker.version}" conf="default">
+			<artifact name="org.osgi.util.tracker" />
+			<artifact name="org.osgi.util.tracker" e:classifier="javadoc" />
+			<artifact name="org.osgi.util.tracker" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.ow2.asm -->
+		<dependency org="org/ow2/asm" name="asm" rev="${asm.version}" conf="default">
+			<artifact name="asm" />
+			<artifact name="asm" e:classifier="javadoc" />
+			<artifact name="asm" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.postgresql -->
+		<dependency org="org/postgresql" name="postgresql" rev="${postgresql.version}" conf="default">
+			<artifact name="postgresql" />
+			<artifact name="postgresql" e:classifier="javadoc" />
+			<artifact name="postgresql" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.slf4j -->
+		<dependency org="org/slf4j" name="slf4j-api" rev="${slf4j.version}" conf="default">
+			<artifact name="slf4j-api" />
+			<artifact name="slf4j-api" e:classifier="javadoc" />
+			<artifact name="slf4j-api" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/slf4j" name="jul-to-slf4j" rev="${slf4j.version}" conf="default">
+			<artifact name="jul-to-slf4j" />
+			<artifact name="jul-to-slf4j" e:classifier="javadoc" />
+			<artifact name="jul-to-slf4j" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/slf4j" name="slf4j-jdk14" rev="${slf4j.version}" conf="default">
+			<artifact name="slf4j-jdk14" />
+			<artifact name="slf4j-jdk14" e:classifier="javadoc" />
+			<artifact name="slf4j-jdk14" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.springframework -->
+		<dependency org="org/springframework" name="spring-aop" rev="${spring.version}" conf="default">
+			<artifact name="spring-aop" />
+			<artifact name="spring-aop" e:classifier="javadoc" />
+			<artifact name="spring-aop" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/springframework" name="spring-beans" rev="${spring.version}" conf="default">
+			<artifact name="spring-beans" />
+			<artifact name="spring-beans" e:classifier="javadoc" />
+			<artifact name="spring-beans" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/springframework" name="spring-context" rev="${spring.version}" conf="default">
+			<artifact name="spring-context" />
+			<artifact name="spring-context" e:classifier="javadoc" />
+			<artifact name="spring-context" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/springframework" name="spring-core" rev="${spring.version}" conf="default">
+			<artifact name="spring-core" />
+			<artifact name="spring-core" e:classifier="javadoc" />
+			<artifact name="spring-core" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/springframework" name="spring-expression" rev="${spring.version}" conf="default">
+			<artifact name="spring-expression" />
+			<artifact name="spring-expression" e:classifier="javadoc" />
+			<artifact name="spring-expression" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/springframework" name="spring-jdbc" rev="${spring.version}" conf="default">
+			<artifact name="spring-jdbc" />
+			<artifact name="spring-jdbc" e:classifier="javadoc" />
+			<artifact name="spring-jdbc" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/springframework" name="spring-test" rev="${spring.version}" conf="default">
+			<artifact name="spring-test" />
+			<artifact name="spring-test" e:classifier="javadoc" />
+			<artifact name="spring-test" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="org/springframework" name="spring-tx" rev="${spring.version}" conf="default">
+			<artifact name="spring-tx" />
+			<artifact name="spring-tx" e:classifier="javadoc" />
+			<artifact name="spring-tx" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.testng -->
+		<dependency org="org/testng" name="testng" rev="${testng.version}" conf="default">
+			<artifact name="testng" />
+			<artifact name="testng" e:classifier="javadoc" />
+			<artifact name="testng" e:classifier="sources" />
+		</dependency>
+
+		<!-- com.beust.jcommander -->
+		<dependency org="com/beust" name="jcommander" rev="${jcommander.version}" conf="default">
+			<artifact name="jcommander" />
+			<artifact name="jcommander" e:classifier="javadoc" />
+			<artifact name="jcommander" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.codehaus.woodstox.stax2-api -->
+		<dependency org="org/codehaus/woodstox" name="stax2-api" rev="${stax2-api.version}" conf="default">
+			<artifact name="stax2-api" />
+			<artifact name="stax2-api" e:classifier="javadoc" />
+			<artifact name="stax2-api" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.w3c.css -->
+		<dependency org="org/w3c/css" name="sac" rev="${sac.version}" conf="default">
+			<artifact name="sac" />
+			<artifact name="sac" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- org.xerial -->
+		<dependency org="org/xerial" name="sqlite-jdbc" rev="${org.xerial.sqlite-jdbc.version}" conf="default">
+			<artifact name="sqlite-jdbc" />
+			<artifact name="sqlite-jdbc" e:classifier="javadoc" />
+			<artifact name="sqlite-jdbc" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- tapestry -->
+		<dependency org="tapestry" name="tapestry" rev="${tapestry.version}" conf="default">
+			<artifact name="tapestry" />
+		</dependency>
+
+
+		<!-- uk.com.robust-it.cloning -->
+		<dependency org="uk/com/robust-it" name="cloning" rev="${uk.com.robust-it.cloning.version}" conf="default">
+			<artifact name="cloning" />
+			<artifact name="cloning" e:classifier="javadoc" />
+			<artifact name="cloning" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- xpp3 -->
+		<dependency org="xpp3" name="xpp3" rev="${xpp3.version}" conf="default">
+			<artifact name="xpp3" />
+			<artifact name="xpp3" e:classifier="javadoc" />
+			<artifact name="xpp3" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- zxing -->
+		<dependency org="com/google/zxing" name="core" rev="${zxing.version}" conf="default">
+			<artifact name="core" />
+			<artifact name="core" e:classifier="javadoc" />
+			<artifact name="core" e:classifier="sources" />
+		</dependency>
+
+		<dependency org="com/google/zxing" name="javase" rev="${zxing.version}" conf="default">
+			<artifact name="javase" />
+			<artifact name="javase" e:classifier="javadoc" />
+			<artifact name="javase" e:classifier="sources" />
+		</dependency>
+
+
+		<!-- aopalliance -->
+		<conflict org="aopalliance" module="aopalliance" rev="${aopalliance.version}" />
+
+
+		<!-- bcel -->
+		<conflict org="bcel" module="bcel" rev="${bcel.version}" />
+
+
+		<!-- ch.qos.logback -->
+		<conflict org="ch/qos/logback" module="logback-core" rev="${logback.version}" />
+		<conflict org="ch/qos/logback" module="logback-classic" rev="${logback.version}" />
+
+
+		<!-- com.fasterxml.jackson -->
+		<conflict org="com/fasterxml/jackson/core" module="jackson-annotations" rev="${jackson.version}" />
+		<conflict org="com/fasterxml/jackson/core" module="jackson-core" rev="${jackson.version}" />
+		<conflict org="com/fasterxml/jackson/core" module="jackson-databind" rev="${jackson.version}" />
+		<conflict org="com/fasterxml/jackson/jaxrs" module="jackson-jaxrs-base" rev="${jackson.version}" />
+		<conflict org="com/fasterxml/jackson/jaxrs" module="jackson-jaxrs-json-provider" rev="${jackson.version}" />
+		<conflict org="com/fasterxml/jackson/module" module="jackson-module-jaxb-annotations" rev="${jackson.version}" />
+
+
+		<!-- com.google.code.gson -->
+		<conflict org="com/google/code/gson" module="gson" rev="${gson.version}" />
+
+
+		<!-- com.google.gwt -->
+		<conflict org="com/google/gwt" module="gwt-dev" rev="${gwt.version}" />
+		<conflict org="com/google/gwt" module="gwt-elemental" rev="${gwt.version}" />
+		<conflict org="com/google/gwt" module="gwt-user" rev="${gwt.version}" />
+		<conflict org="com/google/guava" module="guava" rev="${com.google.guava.version}" />
+		<conflict org="com/google/gwt/inject" module="gin" rev="${com.google.gin.version}" />
+		<conflict org="com/google/inject/extensions" module="guice-assistedinject" rev="${com.google.guice.version}" />
+		<conflict org="com/google/inject" module="guice" rev="${com.google.guice.version}" />
+
+
+		<!-- com.nordicid -->
+		<conflict org="com/nordicid" module="nurapi" rev="${nordicid.version}" />
+
+
+		<!-- com.sun.xml -->
+		<conflict org="com/sun/xml/bind" module="jaxb-core" rev="${jaxb.version}" />
+		<conflict org="com/sun/xml/bind" module="jaxb-impl" rev="${jaxb.version}" />
+		<conflict org="com/sun/xml/bind" module="jaxb-xjc" rev="${jaxb.version}" />
+		<conflict org="com/sun/xml/stream/buffer" module="streambuffer" rev="${streambuffer.version}" />
+		<conflict org="com/sun/xml/ws" module="jaxws-rt" rev="${jaxws.version}" />
+		<conflict org="com/sun/xml/ws" module="jaxws-tools" rev="${jaxws.version}" />
+		<conflict org="com/sun/xml/ws" module="policy" rev="${policy.version}" />
+
+
+		<!-- commons -->
+		<conflict org="commons-codec" module="commons-codec" rev="${commons-codec.version}" />
+		<conflict org="commons-httpclient" module="commons-httpclient" rev="${commons-httpclient.version}" />
+		<conflict org="commons-io" module="commons-io" rev="${commons-io.version}" />
+		<conflict org="commons-logging" module="commons-logging" rev="${commons-logging.version}" />
+
+
+		<!-- io.netty -->
+		<conflict org="io/netty" module="netty" rev="${netty.camel-netty.version}" />
+		<conflict org="io/netty" module="netty-buffer" rev="${netty.version}" />
+		<conflict org="io/netty" module="netty-codec" rev="${netty.version}" />
+		<conflict org="io/netty" module="netty-common" rev="${netty.version}" />
+		<conflict org="io/netty" module="netty-handler" rev="${netty.version}" />
+		<conflict org="io/netty" module="netty-transport" rev="${netty.version}" />
+
+		<!-- javax -->
+		<conflict org="javax/inject" module="javax.inject" rev="${javax.inject.version}" />
+		<conflict org="javax/annotation" module="javax.annotation-api" rev="${javax.annotation-api.version}" />
+		<conflict org="javax/mail" module="javax.mail-api" rev="${javax.mail.version}" />
+		<conflict org="javax/servlet" module="javax.servlet-api" rev="${javax.servlet-api.version}" />
+		<conflict org="javax/validation" module="validation-api" rev="${validation-api.version}" />
+		<conflict org="javax/ws/rs" module="javax.ws.rs-api" rev="${javax.ws.rs-api.version}" />
+		<conflict org="javax/media/jai" module="javax.media.jai.core" rev="${jai.version}" />
+		<conflict org="javax/media/jai" module="javax.media.jai.codec" rev="${jai.version}" />
+
+		<!-- joda-time -->
+		<conflict org="joda-time" module="joda-time" rev="${joda-time.version}" />
+
+		<!-- log4j -->
+		<conflict org="log4j" module="log4j" rev="${log4j.version}" />
+
+
+		<!-- org.fusesource.restygwt -->
+		<conflict org="org/fusesource/restygwt" module="restygwt" rev="${restygwt.version}" />
+
+		<!-- org.jboss.resteasy -->
+		<conflict org="org/jboss/resteasy" module="resteasy-jackson2-provider" rev="${resteasy.version},${resteasy-legacy.version}" />
+		<conflict org="org/jboss/resteasy" module="resteasy-jaxb-provider" rev="${resteasy.version},${resteasy-legacy.version}" />
+		<conflict org="org/jboss/resteasy" module="resteasy-jaxrs" rev="${resteasy.version},${resteasy-legacy.version}" />
+		<conflict org="org/jboss/resteasy" module="resteasy-multipart-provider" rev="${resteasy.version},${resteasy-legacy.version}" />
+		<conflict org="org/jboss/resteasy" module="resteasy-client" rev="${resteasy.version},${resteasy-legacy.version}" />
+		<conflict org="org/jboss/resteasy" module="resteasy-jdk-http" rev="${resteasy.version},${resteasy-legacy.version}" />
+		<conflict org="org/jboss/resteasy" module="resteasy-netty4" rev="${resteasy.version},${resteasy-legacy.version}" />
+
+		<!-- org.jibx -->
+		<conflict org="org/jibx" module="jibx-bind" rev="${jibx.version}" />
+		<conflict org="org/jibx" module="jibx-extras" rev="${jibx.version}" />
+		<conflict org="org/jibx" module="jibx-run" rev="${jibx.version}" />
+		<conflict org="org/jibx" module="jibx-schema" rev="${jibx.version}" />
+		<conflict org="org/jibx" module="jibx-tools" rev="${jibx.version}" />
+		<conflict org="org/jibx/config/3rdparty/org/eclipse" module="org.eclipse.core.contenttype" rev="${org.eclipse.core.contenttype.version}" />
+		<conflict org="org/jibx/config/3rdparty/org/eclipse" module="org.eclipse.core.jobs" rev="${org.eclipse.core.jobs.version}" />
+		<conflict org="org/jibx/config/3rdparty/org/eclipse" module="org.eclipse.core.resources" rev="${org.eclipse.core.resources.version}" />
+		<conflict org="org/jibx/config/3rdparty/org/eclipse" module="org.eclipse.core.runtime" rev="${org.eclipse.core.runtime.version}" />
+		<conflict org="org/jibx/config/3rdparty/org/eclipse" module="org.eclipse.equinox.common" rev="${org.eclipse.equinox.common.version}" />
+		<conflict org="org/jibx/config/3rdparty/org/eclipse" module="org.eclipse.equinox.preferences" rev="${org.eclipse.equinox.preferences.version}" />
+		<conflict org="org/jibx/config/3rdparty/org/eclipse" module="org.eclipse.jdt.core" rev="${org.eclipse.jdt.core.version}" />
+		<conflict org="org/jibx/config/3rdparty/org/eclipse" module="org.eclipse.osgi" rev="${org.eclipse.osgi.version}" />
+		<conflict org="org/jibx/config/3rdparty/org/eclipse" module="org.eclipse.text" rev="${org.eclipse.text.version}" />
+
+		<!-- org.jmockit -->
+		<conflict org="org/jmockit" module="jmockit" rev="${jmockit.version}" />
+
+
+		<!-- org.jvnet.staxex -->
+		<conflict org="org/jvnet/staxex" module="stax-ex" rev="1.7.7" />
+
+
+		<!-- org.osgi -->
+		<conflict org="org/osgi" module="org.osgi.core" rev="${org.osgi.core.version}" />
+
+
+		<!-- org.ow2.asm -->
+		<conflict org="org/ow2/asm" module="asm" rev="${asm.version}" />
+
+
+		<!-- org.quartz-scheduler -->
+		<conflict org="org/quartz-scheduler" module="quartz" rev="${quartz.version}" />
+
+
+		<!-- org.slf4j -->
+		<conflict org="org/slf4j" module="slf4j-api" rev="${slf4j.version}" />
+		<conflict org="org/slf4j" module="slf4j-jdk14" rev="${slf4j.version}" />
+		<conflict org="org/slf4j" module="jul-to-slf4j" rev="${slf4j.version}" />
+
+
+		<!-- org.springframework -->
+		<conflict org="org/springframework" module="spring-aop" rev="${spring.version}" />
+		<conflict org="org/springframework" module="spring-beans" rev="${spring.version}" />
+		<conflict org="org/springframework" module="spring-context" rev="${spring.version}" />
+		<conflict org="org/springframework" module="spring-core" rev="${spring.version}" />
+		<conflict org="org/springframework" module="spring-expression" rev="${spring.version}" />
+		<conflict org="org/springframework" module="spring-jdbc" rev="${spring.version}" />
+		<conflict org="org/springframework" module="spring-test" rev="${spring.version}" />
+		<conflict org="org/springframework" module="spring-tx" rev="${spring.version}" />
+
+
+		<!-- org.testng -->
+		<conflict org="org/testng" module="testng" rev="${testng.version}" />
+
+
+		<!-- org.xerial -->
+		<conflict org="org/xerial" module="sqlite-jdbc" rev="${org.xerial.sqlite-jdbc.version}" />
+
+
+		<!-- xalan -->
+		<conflict org="xalan" module="xalan" rev="${xalan.version}" />
+
+
+		<!-- xpp3 -->
+		<conflict org="xpp3" module="xpp3" rev="${xpp3.version}" />
+
+	</dependencies>
+
+</ivy-module>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+	<info organisation="com/microsoft/azure/sdk/iot" module="iot-device-client" status="integration" default="true" />
+
+	<configurations>
+		<conf name="default" />
+		<conf name="module" />
+		<conf name="doc" />
+		<conf name="src" />
+	</configurations>
+
+	<publications>
+		<artifact name="iot-device-client" type="jar" ext="jar" conf="default,module" />
+		<artifact name="iot-device-client-javadoc" type="jar" ext="jar" conf="doc" />
+		<artifact name="iot-device-client-sources" type="jar" ext="jar" conf="src" />
+	</publications>
+	
+	<dependencies>
+		<dependency org="com/microsoft/azure/sdk/iot" name="iot-deps" rev="${iot-deps.version}" conf="default;module->default" />
+		<dependency org="org/slf4j" name="slf4j-api" rev="${slf4j.version}" conf="default;module->default" />
+		<dependency org="org/slf4j" name="slf4j-jdk14" rev="${slf4j.version}" conf="default;module->default" />
+		<dependency org="org/eclipse/paho" name="org.eclipse.paho.client.mqttv3" rev="${paho.version}" conf="default" />
+	</dependencies>
+
+</ivy-module>
